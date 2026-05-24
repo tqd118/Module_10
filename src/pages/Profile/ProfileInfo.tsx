@@ -6,6 +6,7 @@ import { useUser } from "@/context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/context/ThemeContext";
 import { useToast } from "@/context/ToastsContext";
+import { getAssetUrl } from '@/utils/getAssetUrl';
 
 interface Errors {
     userFullName?: string;
@@ -114,7 +115,7 @@ export default function ProfileInfo() {
                 <h2 className={s.title}>Edit profile</h2>
 
                 <div className={s.user}>
-                    <img src={userIcon || user?.userIcon} alt="avatar" />
+                    <img src={getAssetUrl(userIcon || user?.userIcon)} alt="avatar" />
 
                     <div>
                         <label className={s.userNameChange}>

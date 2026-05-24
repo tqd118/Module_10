@@ -3,6 +3,7 @@ import s from "./Header.module.scss"
 import { useSocial } from "@/context/SocialContext";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { getAssetUrl } from '@/utils/getAssetUrl';
 
 export default function Header() {
     const { userId } = useUser();
@@ -20,7 +21,7 @@ export default function Header() {
 
             {user ? (
                 <Link className={s.user} to={`/profile/info/${user.id}`}>
-                    <img src={user.userIcon} alt="avatar" />
+                    <img src={getAssetUrl(user.userIcon)} alt="avatar" />
                     {user.userFullName}
                 </Link>
             ) : (
@@ -47,7 +48,7 @@ export default function Header() {
 
                             {user && (
                                 <Link className={s.user} to={`/profile/info/${user.id}`}>
-                                    <img src={user.userIcon} alt="avatar" />
+                                    <img src={getAssetUrl(user.userIcon)} alt="avatar" />
                                 </Link>
                             )}
                         </div>
