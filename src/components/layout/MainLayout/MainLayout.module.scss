@@ -1,0 +1,8 @@
+.layout {
+    height: 100svh;
+}
+
+.content {
+	min-height: calc(100svh - 68px);
+	display: grid;
+}

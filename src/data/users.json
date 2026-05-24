@@ -1,0 +1,89 @@
+[
+    {
+        "id": "user-91acdd",
+        "username": "@forestwalker",
+        "userIcon": "/assets/imgs/users/forestwalker.png",
+        "likedPosts": [
+            "post-17ca92ff",
+            "post-5bb1ce09"
+        ],
+        "comments": [
+            "comment-a12bc"
+        ],
+        "userFullName": "Ethan Cooper",
+        "userMail": "ethan.cooper@randommail.com",
+        "userPassword": "Qw7pL9eA",
+        "userDescription": "Outdoor enthusiast who loves hiking, quiet forests, and long weekend trips away from the city."
+    },
+    {
+        "id": "user-77be21",
+        "username": "@capslock",
+        "userIcon": "/assets/imgs/users/capslock.png",
+        "likedPosts": [
+            "post-8f21ab3c",
+            "post-5bb1ce09"
+        ],
+        "comments": [
+            "comment-c56fg",
+            "comment-d78hi"
+        ],
+        "userFullName": "Michael Turner",
+        "userMail": "m.turner@mockmail.net",
+        "userPassword": "Zp4tN1xK",
+        "userDescription": "Tech geek with a passion for keyboards, shortcuts, and everything that boosts productivity."
+    },
+    {
+        "id": "user-53fa90",
+        "username": "@movieowl",
+        "userIcon": "/assets/imgs/users/movieowl.png",
+        "likedPosts": [
+            "post-8f21ab3c",
+            "post-5bb1ce09"
+        ],
+        "comments": [
+            "comment-b34de"
+        ],
+        "userFullName": "Olivia Brooks",
+        "userMail": "olivia.brooks@samplemail.org",
+        "userPassword": "H8kLm2Qw",
+        "userDescription": "Film lover who enjoys late‑night movie marathons, indie cinema, and analyzing storytelling techniques."
+    },
+    {
+        "id": "user-28dd64",
+        "username": "@breadwizard",
+        "userIcon": "/assets/imgs/users/breadwizard.png",
+        "likedPosts": [
+            "post-99df63be"
+        ],
+        "comments": [],
+        "userFullName": "Jacob Mitchell",
+        "userMail": "jacob.mitchell@fakemail.us",
+        "userPassword": "R3tYp9Sa",
+        "userDescription": "Home baker experimenting with sourdough, pastries, and unusual flavor combinations."
+    },
+    {
+        "id": "user-a81fe2",
+        "username": "@midnightsteps",
+        "userIcon": "/assets/imgs/users/midnightsteps.png",
+        "likedPosts": [],
+        "comments": [
+            "comment-e90jk",
+            "comment-f12lm"
+        ],
+        "userFullName": "Sophia Carter",
+        "userMail": "sophia.carter@nomail.com",
+        "userPassword": "Wq9eT7bM",
+        "userDescription": "Night owl who enjoys long walks, quiet music, and exploring the city after dark."
+    },
+    {
+        "id": "user-123456789",
+        "username": "@TestUser",
+        "userIcon": "/assets/imgs/users/hequa.jpg",
+        "likedPosts": [],
+        "comments": [],
+        "userFullName": "Ivan Efremenko",
+        "userMail": "tqd2081@gmail.com",
+        "userPassword": "qwerty123",
+        "userDescription": "Some info"
+    }
+]

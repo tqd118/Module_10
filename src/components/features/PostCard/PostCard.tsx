@@ -1,0 +1,28 @@
+import type { Post } from "@/types/social";
+import s from "./PostCard.module.scss"
+import { useSocial } from "@/context/SocialContext";
+import formatTime from "@/utils/formatTime"
+import PostActivity from "@/components/ui/PostActivity";
+
+export default function PostCard({post}: {post: Post}) {
+    const {state} = useSocial()
+    const author = state.users.find(user => user.id === post.authorId)
+
+    const authorName = author?.userFullName.split(" ")[0];
+
+    return (
+        <article className={s.post}>
+            <div className={s.header}>
+                <img src={author?.userIcon} alt="user" className={s.avatar}/>
+                <span className={s.userName}>{authorName}</span>
+                <span className={s.publishTime}>{`${ formatTime(post.createdAt) } ago`}</span>
+            </div>
+            
+            {post.image ? <img src={post.image} alt="post image" className={s.image}/> : null}
+
+            <p className={s.body}>{post.text}</p>
+
+            <PostActivity post={post}/>
+        </article>
+    );
+}

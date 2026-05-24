@@ -1,0 +1,44 @@
+[
+    {
+        "id": "comment-a12bc",
+        "postId": "post-8f21ab3c",
+        "authorId": "user-91acdd",
+        "text": "Обожаю такие спокойные утренние пейзажи.",
+        "createdAt": "2026-05-10T07:02:00Z"
+    },
+    {
+        "id": "comment-b34de",
+        "postId": "post-8f21ab3c",
+        "authorId": "user-53fa90",
+        "text": "Выглядит как кадр из фильма.",
+        "createdAt": "2026-05-10T07:15:00Z"
+    },
+    {
+        "id": "comment-c56fg",
+        "postId": "post-17ca92ff",
+        "authorId": "user-77be21",
+        "text": "Теперь осталось только подобрать хорошие кейкапы 😄",
+        "createdAt": "2026-05-11T15:01:00Z"
+    },
+    {
+        "id": "comment-d78hi",
+        "postId": "post-44ed7aa1",
+        "authorId": "user-77be21",
+        "text": "Если любишь фантастику — посмотри Arrival.",
+        "createdAt": "2026-05-12T19:22:00Z"
+    },
+    {
+        "id": "comment-e90jk",
+        "postId": "post-44ed7aa1",
+        "authorId": "user-a81fe2",
+        "text": "Я бы пересмотрел Interstellar в сотый раз.",
+        "createdAt": "2026-05-12T19:40:00Z"
+    },
+    {
+        "id": "comment-f12lm",
+        "postId": "post-99df63be",
+        "authorId": "user-a81fe2",
+        "text": "Особенно летом, когда город почти пустой.",
+        "createdAt": "2026-05-14T22:05:00Z"
+    }
+]
