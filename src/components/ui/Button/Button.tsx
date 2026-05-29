@@ -1,3 +1,4 @@
+import { Component, type ReactNode } from "react";
 import s from "./Button.module.scss"
 
 interface ButtonProps {
@@ -6,17 +7,19 @@ interface ButtonProps {
     className?: string;
 }
 
-export default function Button({text, onClick, className}: ButtonProps) {
-    return (
-        <button 
-            className={`${s.button} ${className ? ` ${className}` : ""}`} 
-            onClick={() => {
-                if (onClick) {
-                    onClick();
-                }
-            }}
-        >
-            {text}
-        </button>
-    );
+export default class Button extends Component<ButtonProps> {
+    render(): ReactNode {
+        return (
+            <button 
+                className={`${s.button} ${this.props.className ? ` ${this.props.className}` : ""}`} 
+                onClick={() => {
+                    if (this.props.onClick) {
+                        this.props.onClick();
+                    }
+                }}
+            >
+                {this.props.text}
+            </button>
+        )
+    }
 }
