@@ -16,10 +16,10 @@ export default function PostCard({post}: {post: Post}) {
             <div className={s.header}>
                 <img src={getAssetUrl(author?.userIcon)} alt="user" className={s.avatar}/>
                 <span className={s.userName}>{authorName}</span>
-                <span className={s.publishTime}>{`${ formatTime(post.createdAt) } ago`}</span>
+                <span className={s.publishTime}>{formatTime(post.createdAt)} ago</span>
             </div>
             
-            {post.image ? <img src={post.image} alt="post image" className={s.image}/> : null}
+            {post.image && <img src={post.image} alt="" className={s.image}/>}
 
             <p className={s.body}>{post.text}</p>
 

@@ -3,7 +3,7 @@ import Button from "../Button";
 import s from "./CommentForm.module.scss"
 import { useUser } from "@/context/UserContext";
 import type { Post } from "@/types/social";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function CommentForm({postId}: {postId: Post["id"]}) {
     const {dispatch} = useSocial();
@@ -11,7 +11,8 @@ export default function CommentForm({postId}: {postId: Post["id"]}) {
 
     const [text, setText] = useState("");
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (!text.trim() || !userId) {
             return;
         }
@@ -28,7 +29,7 @@ export default function CommentForm({postId}: {postId: Post["id"]}) {
     }
     
     return (
-        <div className={s.form}>
+        <form className={s.form} onSubmit={e => handleSubmit(e)}>
             <label htmlFor="comment" className={s.label}>
                 <span className={`${s.addCommentIcon} icon-pen`}>Add a comment</span>
                 <textarea 
@@ -39,7 +40,7 @@ export default function CommentForm({postId}: {postId: Post["id"]}) {
                     onChange={e => setText(e.currentTarget.value)}/>
             </label>
 
-            <Button text="Add a comment" handler={handleSubmit} className={s.submit}/>
-        </div>
+            <Button text="Add a comment" className={s.submit}/>
+        </form>
     );
 }

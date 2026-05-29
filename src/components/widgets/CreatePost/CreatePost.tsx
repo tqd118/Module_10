@@ -20,7 +20,7 @@ export default function CreatePost() {
             <span className={s.title}>What’s happening?</span>
             <Button 
                 text="Tell everyone" 
-                handler={() => setIsModalOpen(true)}
+                onClick={() => setIsModalOpen(true)}
                 className={s.button}/>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

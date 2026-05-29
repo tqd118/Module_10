@@ -1,6 +1,6 @@
 import Button from "@/components/ui/Button";
 import s from "./PostForm.module.scss"
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSocial } from "@/context/SocialContext";
 import { useUser } from "@/context/UserContext";
 
@@ -30,7 +30,8 @@ export default function PostForm({onClose}: {onClose: () => void}) {
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (!user || !description) {
             return;
         }
@@ -48,7 +49,7 @@ export default function PostForm({onClose}: {onClose: () => void}) {
     }
 
     return (
-        <form className={s.form}>
+        <form className={s.form} onSubmit={e => handleSubmit(e)}>
             <div className={s.heading}>
                 Create a new post
                 <button onClick={onClose}>✕</button>
@@ -113,7 +114,7 @@ export default function PostForm({onClose}: {onClose: () => void}) {
             </label>
 
             <div className={s.footer}>
-                <Button text="Create" handler={handleSubmit} className={s.button}/>
+                <Button text="Create" className={s.button}/>
             </div>
         </form>
     );

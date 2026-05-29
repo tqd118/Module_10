@@ -10,23 +10,26 @@ interface PostActivityProps {
 }
 
 export default function PostActivity({post}: PostActivityProps) {
-    const {state, dispatch} = useSocial();
+    const { state, dispatch } = useSocial();
     const { userId } = useUser();
 
+    const [expanded, setExpanded] = useState(false);
+
+    let liked = false;
 
     const user = state.users.find(user => user.id === userId);
-    
-    const [liked, setLiked] = useState(user?.likedPosts.includes(post.id));
-    const [expanded, setExpanded] = useState(false)
+    if (user) {
+        liked = (post.likes.includes(user.id));
+    }
 
     const comments = new Set(post.comments);
     const postComments = state.comments.filter(comment =>
         comments.has(comment.id)
-    )
+    );
 
     const handleLike = () => {
         if (user) {
-            setLiked(prev => !prev)
+            liked = !liked;
             dispatch({type: "TOGGLE_LIKE", payload: {postId: post.id, userId: user.id}})
         }
     }

@@ -5,6 +5,7 @@ import { useSocial } from "@/context/SocialContext";
 import { useUser } from "@/context/UserContext";
 import InputField from "@/components/ui/InputField";
 import { useNavigate, Link } from "react-router-dom";
+import { validateEmail, validatePassword } from "@/utils/validation";
 
 export default function Login() {
 	const { state } = useSocial();
@@ -18,25 +19,8 @@ export default function Login() {
 
 	const navigate = useNavigate();
 
-	const validateEmail = (value: string) => {
-		if (!value) return "Email is required";
-		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-			return "Email is not valid";
-		}
-		return "";
-	};
-
-	const validatePassword = (value: string) => {
-		if (!value) {
-			return "Password is required";
-		}
-		if (value.length < 6) {
-			return "Password too short";
-		}
-		return "";
-	};
-
-	const handleSubmit = () => {
+	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		const emailErr = validateEmail(email);
 		const passErr = validatePassword(password);
 
@@ -65,7 +49,7 @@ export default function Login() {
 				</p>
 			</div>
 
-			<form className={s.form} onSubmit={e => e.preventDefault()}>
+			<form className={s.form} onSubmit={e => handleSubmit(e)}>
 				<InputField
 					type="email"
 					label="Email"
@@ -84,7 +68,7 @@ export default function Login() {
 					error={passwordError}
 					success={!passwordError && password.length > 0}/>
 
-				<Button text="Sign In" handler={handleSubmit}/>
+				<Button text="Sign In"/>
 			</form>
 
 			<span className={s.signUp}>

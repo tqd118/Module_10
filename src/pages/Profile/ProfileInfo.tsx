@@ -75,7 +75,8 @@ export default function ProfileInfo() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (!validate() || !user) {
             return;
         }
@@ -109,9 +110,14 @@ export default function ProfileInfo() {
         showToast("Profile info has been updated successfully", "success");
     };
 
+    const handleLogout = (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setUserId(null);
+    }
+
     return (
         <div className={s.info}>
-            <form className={s.profile}>
+            <form className={s.profile} onSubmit={e => handleSubmit(e)}>
                 <h2 className={s.title}>Edit profile</h2>
 
                 <div className={s.user}>
@@ -219,12 +225,11 @@ export default function ProfileInfo() {
 
                 <Button
                     text="Save Profile Changes"
-                    handler={handleSubmit}
                     className={s.saveInfoButton}
                 />
             </form>
 
-            <div className={s.preferences}>
+            <form className={s.preferences} onSubmit={e => handleLogout(e)}>
                 <h2 className={s.title}>Preferences</h2>
 
                 <label className={s.themeSwitch}>
@@ -243,10 +248,9 @@ export default function ProfileInfo() {
 
                 <Button
                     text="Logout"
-                    handler={() => setUserId(null)}
                     className={s.logoutButton}
                 />
-            </div>
+            </form>
         </div>
     );
 }

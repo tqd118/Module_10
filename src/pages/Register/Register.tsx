@@ -6,6 +6,7 @@ import { useUser } from "@/context/UserContext";
 import InputField from "@/components/ui/InputField";
 import { useNavigate, Link } from "react-router-dom";
 import type { User } from "@/types/social";
+import { validateEmail, validatePassword } from "@/utils/validation";
 
 export default function Register() {
     const { state, dispatch } = useSocial();
@@ -19,25 +20,8 @@ export default function Register() {
 
 	const navigate = useNavigate();
 
-	const validateEmail = (value: string) => {
-		if (!value) return "Email is required";
-		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-			return "Email is not valid";
-		}
-		return "";
-	};
-
-	const validatePassword = (value: string) => {
-		if (!value) {
-			return "Password is required";
-		}
-		if (value.length < 6) {
-			return "Password too short";
-		}
-		return "";
-	};
-
-	const handleSubmit = () => {
+	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+		e.preventDefault()
 		const emailErr = validateEmail(email);
 		const passErr = validatePassword(password);
 
@@ -78,7 +62,7 @@ export default function Register() {
 				</p>
 			</div>
 
-			<form className={s.form} onSubmit={e => e.preventDefault()}>
+			<form className={s.form} onSubmit={e => handleSubmit(e)}>
 				<InputField
 					type="email"
 					label="Email"
@@ -98,7 +82,7 @@ export default function Register() {
 					success={!passwordError && password.length > 0}
 					hint={passwordStrength}/>
 
-				<Button text="Sign Up" handler={handleSubmit}/>
+				<Button text="Sign Up"/>
 			</form>
 
 			<p className={s.policy}>By clicking continue, you agree to our <a href="#">Terms of Service</a><br/> and <a href="#">Privacy Policy</a></p>
