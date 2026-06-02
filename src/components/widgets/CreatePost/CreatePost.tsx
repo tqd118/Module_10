@@ -4,19 +4,16 @@ import Button from "@/components/ui/Button";
 import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import PostForm from "@/components/features/PostForm";
-import { useSocial } from "@/context/SocialContext";
 import { getAssetUrl } from '@/utils/getAssetUrl';
 
 export default function CreatePost() {
-    const { userId } = useUser();
-    const { state } = useSocial();
+    const { user } = useUser();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const user = state.users.find(user => user.id === userId);
 
     return (
         <div className={s.createPost}>
-            <img src={getAssetUrl(user?.userIcon)} alt="avatar" className={s.userIcon}/>
+            <img src={getAssetUrl(user?.profileImage)} alt="avatar" className={s.userIcon}/>
             <span className={s.title}>What’s happening?</span>
             <Button 
                 text="Tell everyone" 

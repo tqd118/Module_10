@@ -1,36 +1,25 @@
-import type { Post } from "@/types/social";
+import type { Post, User } from "@/types/social";
 import s from "./PostActivity.module.scss"
-import { useState } from "react";
-import { useSocial } from "@/context/SocialContext";
+import { useEffect, useState } from "react";
 import CommentForm from "../CommentForm";
 import { useUser } from "@/context/UserContext";
+import { useComments } from "@/hooks/useComments";
 
 interface PostActivityProps {
     post: Post;
+    onLike: (postId: number, liked: boolean, user: User) => void;
 }
 
-export default function PostActivity({post}: PostActivityProps) {
-    const { state, dispatch } = useSocial();
-    const { userId } = useUser();
+export default function PostActivity({post, onLike}: PostActivityProps) {
+    const { user } = useUser();
+    const { comments, fetchPostComments, createComment } = useComments();
 
     const [expanded, setExpanded] = useState(false);
-
-    let liked = false;
-
-    const user = state.users.find(user => user.id === userId);
-    if (user) {
-        liked = (post.likes.includes(user.id));
-    }
-
-    const comments = new Set(post.comments);
-    const postComments = state.comments.filter(comment =>
-        comments.has(comment.id)
-    );
+    const liked = user ? post.likedByUsers.some(u => u.id === user.id) : false;
 
     const handleLike = () => {
         if (user) {
-            liked = !liked;
-            dispatch({type: "TOGGLE_LIKE", payload: {postId: post.id, userId: user.id}})
+            onLike(post.id, liked, user);
         }
     }
 
@@ -38,11 +27,11 @@ export default function PostActivity({post}: PostActivityProps) {
         <>
             <div className={s.short}>
                 <i className={`${s.likeIcon} ${liked ? "icon-like-filled" : "icon-like"}`} onClick={handleLike}/>
-                <span>{post.likes.length} likes</span>
+                <span>{post.likesCount} likes</span>
 
                 <i className={`${s.commentsIcon} icon-comments`}/>
                 {user ? (
-                    <span>{post.comments.length} comments</span>
+                    <span>{post.commentsCount} comments</span>
                 ) : (
                     <span>You have to login to see the comments</span>
                 )}
@@ -53,7 +42,12 @@ export default function PostActivity({post}: PostActivityProps) {
                             type="checkbox" 
                             hidden
                             checked={expanded}
-                            onChange={() => setExpanded(prev => !prev)} />
+                            onChange={() => {
+                                setExpanded(prev => !prev);
+                                if (!expanded) {
+                                    fetchPostComments(post.id);
+                                }
+                            }} />
                         <i className={`icon-chevron ${expanded ? s.collapse : s.expand}`}/>
                     </label>
                 )}
@@ -61,8 +55,8 @@ export default function PostActivity({post}: PostActivityProps) {
 
             {user && expanded && (
                 <div className={s.expanded}>
-                    {postComments.map((comment, i) => <span key={comment.id}>#{i + 1}. {comment.text}</span>)}
-                    <CommentForm postId={post.id}/>
+                    {comments.map((comment, i) => <span key={comment.id}>#{i + 1}. {comment.text}</span>)}
+                    <CommentForm postId={post.id} onCreateComment={createComment} />
                 </div>
             )}
         </>

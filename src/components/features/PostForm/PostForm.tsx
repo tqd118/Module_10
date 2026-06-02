@@ -1,8 +1,8 @@
 import Button from "@/components/ui/Button";
 import s from "./PostForm.module.scss"
 import React, { useState } from "react";
-import { useSocial } from "@/context/SocialContext";
 import { useUser } from "@/context/UserContext";
+import { usePosts } from "@/hooks/usePosts";
 
 type ImageType =  {
     link: string;
@@ -10,10 +10,8 @@ type ImageType =  {
 } | null
 
 export default function PostForm({onClose}: {onClose: () => void}) {
-    const { state, dispatch } = useSocial();
-    const { userId } = useUser();
-
-    const user = state.users.find(user => user.id === userId);
+    const { user } = useUser();
+    const { createPost, fetchPosts } = usePosts()
 
     const [isImageDragging, setIsImageDragging] = useState(false);
     const [image, setImage] = useState<ImageType>(null);
@@ -30,21 +28,19 @@ export default function PostForm({onClose}: {onClose: () => void}) {
         });
     };
 
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!user || !description) {
             return;
         }
 
-        dispatch({
-            type: "CREATE_POST",
-            payload: {
-                authorId: user.id, 
-                text: description,
-                image: image?.link
-            }
-        });
+        await createPost({
+            title: "Post title",
+            content: description,
+            image: image?.link
+        })
 
+        fetchPosts();
         onClose();
     }
 

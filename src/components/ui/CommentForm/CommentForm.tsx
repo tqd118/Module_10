@@ -1,12 +1,14 @@
-import { useSocial } from "@/context/SocialContext";
 import Button from "../Button";
 import s from "./CommentForm.module.scss"
 import { useUser } from "@/context/UserContext";
-import type { Post } from "@/types/social";
 import React, { useState } from "react";
 
-export default function CommentForm({postId}: {postId: Post["id"]}) {
-    const {dispatch} = useSocial();
+interface CommentFormProps {
+    postId: number;
+    onCreateComment: (postId: number, text: string) => void;
+}
+
+export default function CommentForm({postId, onCreateComment}: CommentFormProps) {
     const { userId } = useUser();
 
     const [text, setText] = useState("");
@@ -16,15 +18,8 @@ export default function CommentForm({postId}: {postId: Post["id"]}) {
         if (!text.trim() || !userId) {
             return;
         }
-        dispatch({
-            type: "CREATE_COMMENT",
-            payload: {
-                authorId: userId,
-                postId: postId,
-                text
-            }
-        });
 
+        onCreateComment(postId, text);
         setText("");
     }
     

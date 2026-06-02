@@ -1,29 +1,28 @@
-import type { Post } from "@/types/social";
+import type { Post, User } from "@/types/social";
 import s from "./PostCard.module.scss"
-import { useSocial } from "@/context/SocialContext";
 import formatTime from "@/utils/formatTime"
 import PostActivity from "@/components/ui/PostActivity";
 import { getAssetUrl } from '@/utils/getAssetUrl';
 
-export default function PostCard({post}: {post: Post}) {
-    const {state} = useSocial()
-    const author = state.users.find(user => user.id === post.authorId)
+interface PostCardProps {
+    post: Post;
+    onLike: (postId: number, liked: boolean, user: User) => void;
+}
 
-    const authorName = author?.userFullName.split(" ")[0];
-
+export default function PostCard({post, onLike}: PostCardProps) {
     return (
         <article className={s.post}>
             <div className={s.header}>
-                <img src={getAssetUrl(author?.userIcon)} alt="user" className={s.avatar}/>
-                <span className={s.userName}>{authorName}</span>
-                <span className={s.publishTime}>{formatTime(post.createdAt)} ago</span>
+                <img src={ getAssetUrl(post.author?.profileImage) } alt="user" className={s.avatar}/>
+                <span className={s.userName}>{post.author?.firstName || post.author?.username}</span>
+                <span className={s.publishTime}>{formatTime(post.creationDate)} ago</span>
             </div>
             
-            {post.image && <img src={post.image} alt="" className={s.image}/>}
+            {post.image && <img src={ getAssetUrl(post.image) } alt="" className={s.image}/>}
 
-            <p className={s.body}>{post.text}</p>
+            <p className={s.body}>{post.content}</p>
 
-            <PostActivity post={post}/>
+            <PostActivity post={post} onLike={onLike}/>
         </article>
     );
 }

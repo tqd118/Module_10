@@ -1,15 +1,15 @@
 import { useState } from "react";
 import s from "./Login.module.scss";
 import Button from "@/components/ui/Button";
-import { useSocial } from "@/context/SocialContext";
-import { useUser } from "@/context/UserContext";
 import InputField from "@/components/ui/InputField";
 import { useNavigate, Link } from "react-router-dom";
 import { validateEmail, validatePassword } from "@/utils/validation";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/context/ToastsContext";
 
 export default function Login() {
-	const { state } = useSocial();
-	const { setUserId } = useUser();
+	const { login } = useAuth()
+	const { showToast } = useToast()
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -17,9 +17,11 @@ export default function Login() {
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState("");
 
+	const [loading, setLoading] = useState(false)
+
 	const navigate = useNavigate();
 
-	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const emailErr = validateEmail(email);
 		const passErr = validatePassword(password);
@@ -29,15 +31,17 @@ export default function Login() {
 
 		if (emailErr || passErr) return;
 
-		const foundUser = state.users.find(u => u.userMail === email && u.userPassword === password);
+		setLoading(true);
 
-		if (!foundUser) {
-			setPasswordError("Incorrect password");
-			return;
+		try {
+			await login(email, password);
+			navigate("/");
+			showToast("Succesfuly sign in", "success");
+		} catch(e) {
+			setPasswordError(e instanceof Error ? e.message : "Incorrect email or password");
+		} finally {
+			setLoading(false);
 		}
-
-		setUserId(foundUser.id);
-		navigate("/");
 	};
 
 	return (

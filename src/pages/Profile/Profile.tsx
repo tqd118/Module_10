@@ -1,11 +1,15 @@
 import s from "./Profile.module.scss"
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 import ProfileInfo from "./ProfileInfo";
-import type { User } from "@/types/social";
+import { useProfile } from "@/hooks/useProfile";
+import { useUser } from "@/context/UserContext";
 
 
 export default function Profile() {
-    const { userId, page } = useParams<{userId: User["id"], page: "info" | "stats"}>();
+    const { userId, page } = useParams<{userId: string, page: "info" | "stats"}>();
+    const { fetchMe } = useProfile();
+    const { user } = useUser();
     const navigate = useNavigate();
 
     if (userId === undefined) {
@@ -19,6 +23,22 @@ export default function Profile() {
             navigate(`/profile/info/${userId}`);
         }
     }
+
+    useEffect(() => {
+        const checkAutorized = async () => {
+            try {
+                const authorizedUser = await fetchMe();
+                if (authorizedUser.id !== +userId) {
+                    navigate("/login", { replace: true });
+                }
+            } catch (e) {}
+        }
+
+        if (!user) {
+            navigate("/login", { replace: true });
+        }
+        checkAutorized()
+    }, [userId, user]);
 
     return (
         <div className={s.page}>
