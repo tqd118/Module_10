@@ -1,5 +1,5 @@
 import Button from "../Button";
-import s from "./CommentForm.module.scss"
+import s from "./CommentForm.module.scss";
 import { useUser } from "@/context/UserContext";
 import React, { useState } from "react";
 
@@ -8,7 +8,10 @@ interface CommentFormProps {
     onCreateComment: (postId: number, text: string) => void;
 }
 
-export default function CommentForm({postId, onCreateComment}: CommentFormProps) {
+export default function CommentForm({
+    postId,
+    onCreateComment,
+}: CommentFormProps) {
     const { userId } = useUser();
 
     const [text, setText] = useState("");
@@ -21,21 +24,24 @@ export default function CommentForm({postId, onCreateComment}: CommentFormProps)
 
         onCreateComment(postId, text);
         setText("");
-    }
-    
+    };
+
     return (
-        <form className={s.form} onSubmit={e => handleSubmit(e)}>
+        <form className={s.form} onSubmit={(e) => handleSubmit(e)}>
             <label htmlFor="comment" className={s.label}>
-                <span className={`${s.addCommentIcon} icon-pen`}>Add a comment</span>
-                <textarea 
-                    id="comment" 
-                    className={s.textarea} 
+                <span className={`${s.addCommentIcon} icon-pen`}>
+                    Add a comment
+                </span>
+                <textarea
+                    id="comment"
+                    className={s.textarea}
                     placeholder="Write description here..."
                     value={text}
-                    onChange={e => setText(e.currentTarget.value)}/>
+                    onChange={(e) => setText(e.currentTarget.value)}
+                />
             </label>
 
-            <Button text="Add a comment" className={s.submit}/>
+            <Button className={s.submit}>Add a comment</Button>
         </form>
     );
 }

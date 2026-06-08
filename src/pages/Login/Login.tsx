@@ -72,7 +72,9 @@ export default function Login() {
 					error={passwordError}
 					success={!passwordError && password.length > 0}/>
 
-				<Button text="Sign In"/>
+				<Button disabled={loading}>
+					Sign In
+				</Button>
 			</form>
 
 			<span className={s.signUp}>

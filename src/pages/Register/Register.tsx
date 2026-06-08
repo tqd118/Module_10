@@ -73,7 +73,9 @@ export default function Register() {
 					success={!passwordError && password.length > 0}
 					hint={passwordStrength}/>
 
-				<Button text="Sign Up"/>
+				<Button disabled={loading}>
+					Sign Up
+				</Button>
 			</form>
 
 			<p className={s.policy}>By clicking continue, you agree to our <a href="#">Terms of Service</a><br/> and <a href="#">Privacy Policy</a></p>

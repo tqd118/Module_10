@@ -1,43 +1,43 @@
 @import "./icons.css";
 
 :root {
-	--color-bg: #fff;
-	--color-surface: #fafafa;
-	--color-surface-subtle: #fff;
+    --color-bg: #fff;
+    --color-surface: #fafafa;
+    --color-surface-subtle: #fff;
 
-	--color-text-primary: #1b2037;
-	--color-text-secondary: #667085;
+    --color-text-primary: #1b2037;
+    --color-text-secondary: #667085;
 
-	--color-border: #e0e2e7;
-	--color-brand-primary: #f81;
-	--color-brand-secondary: #6236cc;
+    --color-border: #e0e2e7;
+    --color-brand-primary: #f81;
+    --color-brand-secondary: #6236cc;
 
-	--color-feedback-positive: #08b94e;
-	--color-error: #ff554a;
-	--color-warn: #ffc14a;
-	--color-success: #ff8811;
+    --color-feedback-positive: #08b94e;
+    --color-error: #ff554a;
+    --color-warn: #ffc14a;
+    --color-success: #ff8811;
 
-	--font-main: "Inter", sans-serif;
+    --font-main: "Inter", sans-serif;
 }
 
 :root[data-theme="dark"] {
-	--color-bg: #1e2037;
-	--color-surface: #0e1223;
-	--color-surface-subtle: #151a2d;
+    --color-bg: #1e2037;
+    --color-surface: #0e1223;
+    --color-surface-subtle: #151a2d;
 
-	--color-text-primary: #fff;
-	--color-text-secondary: #8791b7;
+    --color-text-primary: #fff;
+    --color-text-secondary: #8791b7;
 
-	--color-border: #384162;
+    --color-border: #384162;
 }
 
 * {
-  	box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  	background-color: var(--color-bg);
-	font-family: var(--font-main);
+    background-color: var(--color-bg);
+    font-family: var(--font-main);
 }
 
 .icon-like {
@@ -49,61 +49,61 @@ body {
 }
 
 .toastContainer {
-	position: fixed;
-	right: 20px;
-	bottom: 20px;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
 
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
-	z-index: 100;
+    z-index: 100;
 }
 
 .toast {
-	display: flex;
-	justify-content: space-between;
-	align-items: start;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
 
-	width: 350px;
-	padding: 24px;
-	border-radius: 8px;
+    width: 350px;
+    padding: 24px;
+    border-radius: 8px;
 
-	color: white;
+    color: white;
 
-	font-size: 18px;
-	animation: slideIn 0.25s;
-	opacity: 0.8;
+    font-size: 18px;
+    animation: slideIn 0.25s;
+    opacity: 0.8;
 
-	p {
-		margin: 0;
-	}
+    p {
+        margin: 0;
+    }
 
-	div {
-		cursor: pointer;
-	}
+    div {
+        cursor: pointer;
+    }
 
-	&.success {
-		background-color: var(--color-success);
-	}
+    &.success {
+        background-color: var(--color-success);
+    }
 
-	&.error {
-		background-color: var(--color-error);
-	}
+    &.error {
+        background-color: var(--color-error);
+    }
 
-	&.warn {
-		background-color: var(--color-warn);
-	}
+    &.warn {
+        background-color: var(--color-warn);
+    }
 }
 
 @keyframes slideIn {
-	from {
-		transform: translateX(120%);
-		opacity: 0;
-	}
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
 
-	to {
-		transform: translateX(0);
-		opacity: 0.8;
-	}
+    to {
+        transform: translateX(0);
+        opacity: 0.8;
+    }
 }

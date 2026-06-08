@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { gql } from "@/api/graphql";
 import type { Post, User } from "@/types/social";
 
@@ -15,7 +15,9 @@ const POST_FIELDS = `
         profileImage
     }
     likesCount
-    likedByUsers
+    likedByUsers {
+        id
+    }
     commentsCount
     creationDate
     modifiedDate
@@ -38,7 +40,7 @@ export function usePosts() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchPosts = useCallback(async () => {
+    const fetchPosts = async () => {
         setLoading(true);
         setError(null);
 
@@ -51,13 +53,13 @@ export function usePosts() {
                 }
             `);
 
-            setPosts(allPosts);
+            setPosts(allPosts.sort((a, b) => Date.parse(b.creationDate) - Date.parse(a.creationDate)));
         } catch (e) {
             setError(e instanceof Error ? e.message : "Failed to load posts");
         } finally {
             setLoading(false);
         }
-    }, []);
+    }
 
     const fetchPost = async (postId: number): Promise<Post> => {
         try {
@@ -87,7 +89,7 @@ export function usePosts() {
                 { input }
             );
 
-            //setPosts(prev => [createPost, ...prev]);
+            setPosts(prev => [createPost, ...prev]);
 
             return createPost;
         } catch (e) {
@@ -154,6 +156,9 @@ export function usePosts() {
                     ${mutation}(postId: $postId) {
                         id
                         likesCount
+                        likedByUsers {
+                            id
+                        }
                     }
                 }
             `, { postId });

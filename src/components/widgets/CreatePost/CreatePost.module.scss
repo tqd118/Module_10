@@ -30,6 +30,11 @@
     }
 }
 
+.fallback {
+    color: var(--color-text-primary);
+    height: 315px;
+}
+
 @media (max-width: 640px) {
     .createPost {
         border-left: none;

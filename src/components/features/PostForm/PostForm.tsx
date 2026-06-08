@@ -1,17 +1,17 @@
 import Button from "@/components/ui/Button";
-import s from "./PostForm.module.scss"
+import s from "./PostForm.module.scss";
 import React, { useState } from "react";
 import { useUser } from "@/context/UserContext";
-import { usePosts } from "@/hooks/usePosts";
+import { usePostsContext } from "@/context/PostsContext";
 
-type ImageType =  {
+type ImageType = {
     link: string;
     name: string;
-} | null
+} | null;
 
-export default function PostForm({onClose}: {onClose: () => void}) {
+export default function PostForm({ onClose }: { onClose: () => void }) {
     const { user } = useUser();
-    const { createPost, fetchPosts } = usePosts()
+    const { createPost } = usePostsContext();
 
     const [isImageDragging, setIsImageDragging] = useState(false);
     const [image, setImage] = useState<ImageType>(null);
@@ -24,7 +24,7 @@ export default function PostForm({onClose}: {onClose: () => void}) {
 
         setImage({
             link: URL.createObjectURL(file),
-            name: file.name
+            name: file.name,
         });
     };
 
@@ -37,30 +37,30 @@ export default function PostForm({onClose}: {onClose: () => void}) {
         await createPost({
             title: "Post title",
             content: description,
-            image: image?.link
-        })
+            image: image?.link,
+        });
 
-        fetchPosts();
         onClose();
-    }
+    };
 
     return (
-        <form className={s.form} onSubmit={e => handleSubmit(e)}>
+        <form className={s.form} onSubmit={(e) => handleSubmit(e)}>
             <div className={s.heading}>
                 Create a new post
                 <button onClick={onClose}>✕</button>
             </div>
 
             <label htmlFor="description">
-                <i className="icon-pen"/> Description
+                <i className="icon-pen" /> Description
             </label>
-            <input 
-                type="text" 
-                id="description" 
-                className={`${s.textInput} ${s.descriptionInput}`} 
+            <input
+                type="text"
+                id="description"
+                className={`${s.textInput} ${s.descriptionInput}`}
                 placeholder="Write description here..."
                 value={description}
-                onChange={e => setDescription(e.currentTarget.value)}/>
+                onChange={(e) => setDescription(e.currentTarget.value)}
+            />
 
             <label
                 className={`${s.imgField} ${isImageDragging ? s.dragging : ""}`}
@@ -82,20 +82,22 @@ export default function PostForm({onClose}: {onClose: () => void}) {
                     type="file"
                     accept="image/*"
                     hidden
-                    onChange={(e) =>
-                        handleFileSelect(e.target.files?.[0])
-                    }
+                    onChange={(e) => handleFileSelect(e.target.files?.[0])}
                 />
 
                 {image ? (
                     <>
-                        <img src={image.link} alt="your image" className={s.previewImage}/>
+                        <img
+                            src={image.link}
+                            alt="your image"
+                            className={s.previewImage}
+                        />
                         <h4 className={s.previewName}>{image.name}</h4>
                     </>
                 ) : (
                     <>
-                        <i className={`${s.importIcon} icon-import`}/>
-                    
+                        <i className={`${s.importIcon} icon-import`} />
+
                         <div>
                             <p className={s.imgFieldTitle}>
                                 Select a file or drag and drop here
@@ -110,7 +112,7 @@ export default function PostForm({onClose}: {onClose: () => void}) {
             </label>
 
             <div className={s.footer}>
-                <Button text="Create" className={s.button}/>
+                <Button className={s.button}>Create</Button>
             </div>
         </form>
     );

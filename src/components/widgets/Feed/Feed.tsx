@@ -1,14 +1,14 @@
 import PostCard from "@/components/features/PostCard";
 import s from "./Feed.module.scss"
-import { usePosts } from "@/hooks/usePosts";
 import { useEffect } from "react";
+import { usePostsContext } from "@/context/PostsContext";
 
 export default function Feed() {
-    const { posts, fetchPosts, toggleLike, loading, error } = usePosts();
+    const { posts, fetchPosts, toggleLike, loading, error } = usePostsContext();
 
     useEffect(() => {
         fetchPosts();
-    }, [fetchPosts]);
+    }, []);
 
     let content = null;
 

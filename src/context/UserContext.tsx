@@ -1,5 +1,13 @@
 import type { User } from "@/types/social";
-import { createContext, useContext, useState, useEffect, type Dispatch, type ReactNode, type SetStateAction } from "react";
+import {
+    createContext,
+    useContext,
+    useState,
+    useEffect,
+    type Dispatch,
+    type ReactNode,
+    type SetStateAction,
+} from "react";
 
 interface UserContextType {
     userId: number | null;
@@ -10,7 +18,7 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | null>(null);
 
-export function UserProvider({children}: {children: ReactNode}) {
+export function UserProvider({ children }: { children: ReactNode }) {
     const [userId, setUserId] = useState<number | null>(() => {
         const id = localStorage.getItem("userId");
         return id ? +id : null;
@@ -30,12 +38,12 @@ export function UserProvider({children}: {children: ReactNode}) {
     }, [userId, user]);
 
     return (
-        <UserContext.Provider 
+        <UserContext.Provider
             value={{
-                userId, 
+                userId,
                 setUserId,
                 user,
-                setUser
+                setUser,
             }}
         >
             {children}

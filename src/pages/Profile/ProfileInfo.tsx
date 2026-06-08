@@ -229,10 +229,9 @@ export default function ProfileInfo() {
                     )}
                 </label>
 
-                <Button
-                    text="Save Profile Changes"
-                    className={s.saveInfoButton}
-                />
+                <Button className={s.saveInfoButton}>
+                    Save Profile Changes
+                </Button>
             </form>
 
             <form className={s.preferences} onSubmit={e => handleLogout(e)}>
@@ -252,10 +251,9 @@ export default function ProfileInfo() {
 
                 <h2 className={s.title}>Actions</h2>
 
-                <Button
-                    text="Logout"
-                    className={s.logoutButton}
-                />
+                <Button className={s.logoutButton}>
+                    Logout
+                </Button>
             </form>
         </div>
     );

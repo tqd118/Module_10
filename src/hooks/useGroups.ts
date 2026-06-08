@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { gql } from "@/api/graphql";
 import type { Group } from "@/types/social";
 
@@ -24,7 +24,7 @@ export function useGroups() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchGroups = useCallback(async () => {
+    const fetchGroups = async () => {
         setLoading(true);
         setError(null);
 
@@ -43,7 +43,7 @@ export function useGroups() {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }
 
     const fetchGroup = async (groupId: number): Promise<Group> => {
         try {

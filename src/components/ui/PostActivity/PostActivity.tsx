@@ -1,6 +1,6 @@
 import type { Post, User } from "@/types/social";
 import s from "./PostActivity.module.scss"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CommentForm from "../CommentForm";
 import { useUser } from "@/context/UserContext";
 import { useComments } from "@/hooks/useComments";

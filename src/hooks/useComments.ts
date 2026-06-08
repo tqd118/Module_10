@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { gql } from "@/api/graphql";
 import type { Comment } from "@/types/social";
 
@@ -20,7 +20,7 @@ export function useComments() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchPostComments = useCallback(async (postId: number) => {
+    const fetchPostComments = async (postId: number) => {
         setLoading(true);
         setError(null);
 
@@ -40,7 +40,7 @@ export function useComments() {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }
 
     const createComment = async (postId: number, text: string): Promise<Comment> => {
         const { createComment } = await gql<{ createComment: Comment }>(
