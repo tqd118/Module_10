@@ -1,0 +1,16 @@
+.button {
+    background-color: var(--color-brand-primary);
+    color: white;
+    height: 44px;
+    border: none;
+
+    transition: .3s all;
+    width: 100%;
+
+    &:hover {
+        background-color: var(--color-feedback-positive);
+    }
+    &:active {
+        background-color: var(--color-brand-secondary);
+    }
+}

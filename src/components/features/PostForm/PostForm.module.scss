@@ -1,0 +1,133 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--color-text-primary);
+
+    font-size: 14px;
+
+    .heading {
+        font-size: 36px;
+        display: flex;
+        justify-content: space-between;
+
+        button {
+            background-color: var(--color-subtle);
+            color: var(--color-text-primary);
+            border: none;
+
+            height: 24px;
+            width: 24px;
+
+            font-size: 28px;
+            cursor: pointer;
+        }
+    }
+
+    label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .textInput {
+        border: 1px solid var(--color-border);
+        background-color: var(--color-surface-subtle);
+        color: var(--color-text-secondary);
+        min-height: 48px;
+        padding: 14px;
+
+        &.titleInput {
+            max-width: 327px;
+        }
+
+        &.descriptionInput {
+            min-height: 58px;
+        }
+
+        &:focus {
+            outline: none;
+            border: 1px solid var(--color-brand-secondary);
+            color: var(--color-text-primary);
+        }
+    }
+
+    .imgField {
+        width: 100%;
+        height: 90px;
+
+        padding: 16px 32px;
+
+        display: flex;
+        align-items: center;
+        gap: 24px;
+
+        cursor: pointer;
+
+        border: 1px dashed var(--color-border);
+        background: var(--color-surface);
+
+        &.dragging {
+            border-color: var(--color-brand-primary);
+        }
+
+        .importIcon {
+            font-size: 36px;
+        }
+
+        .imgFieldTitle {
+            margin: 0;
+            color: var(--color-text-primary);
+        }
+
+        .imgFieldSubtitle {
+            margin: 0;
+            color: var(--color-text-secondary);
+            margin-top: 12px;
+        }
+
+        .previewImage {
+            height: 100%;
+        }
+
+        .previewName {
+            margin: 0;
+            font-size: 12px;
+        }
+    }
+
+    .footer {
+        display: flex;
+        justify-content: end;
+    }
+
+    .button {
+        width: 144px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form {
+        .heading {
+            font-size: 16px;
+
+            button {
+                font-size: 20px;
+            }
+        }
+
+        .imgField {
+            padding: 8px 12px;
+            font-size: 14px;
+            text-align: center;
+
+            gap: 8px;
+        }
+
+        .button {
+            height: 36px;
+            width: 96px;
+        }
+    }
+
+}

@@ -1,0 +1,145 @@
+.header {
+    height: 48px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+
+    background-color: var(--color-surface);
+
+    padding: 12px 24px;
+    z-index: 20;
+
+    display: flex;
+    justify-content: space-between;
+
+    .logo {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        
+        color: var(--color-text-primary);
+        font-size: 18px;
+        font-weight: 600;
+
+        text-decoration: none;
+
+        i {
+            color: var(--color-brand-primary);
+            font-size: 24px;
+        }
+
+    }
+
+
+    .user {
+        font-size: 18px;
+        text-decoration: none;
+        color: var(--color-text-primary);
+
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        cursor: pointer;
+
+        img {
+            height: 24px;
+            width: 24px;
+
+            border-radius: 12px;
+        }
+    }
+
+    .links {
+        a {
+            color: var(--color-text-primary);
+            text-decoration: none;
+            margin-left: 36px;
+        }
+    }
+
+    .burgerMenu {
+        width: 32px;
+        height: 24px;
+        
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+
+        cursor: pointer;
+
+        padding: 0;
+        border: none;
+        background: none;
+
+        span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: var(--color-text-primary);
+            border-radius: 3px;
+        }
+    }
+}
+
+.menuOverlay {
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(8px);
+    background: transparent;
+    z-index: 30;
+    display: none;
+
+    .menu {
+        height: 100%;
+        width: 80%;
+        background-color: var(--color-bg);
+        margin-left: auto;
+        border-left: 2px solid var(--color-border);
+
+        .menuHeader {
+            position: static;
+            margin-bottom: 10px;
+
+            .user {
+                display: block;
+            }
+        }
+
+        .menuButton {
+            display: block;
+            background-color: var(--color-surface);
+            color: var(--color-text-secondary);
+            font-size: 18px;
+            height: 44px;
+            margin: 0 12px;
+            margin-bottom: 8px;
+            padding: 8px;
+            line-height: 24px;
+
+            text-decoration: none;
+
+            &:visited {
+                color: var(--color-text-secondary);
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+
+@media (max-width: 480px) {
+    .header {
+        .user, .links {
+            display: none;
+        }
+
+        .burgerMenu {
+            display: flex;
+        }
+    }
+
+    .menuOverlay {
+        display: block;
+    }
+}

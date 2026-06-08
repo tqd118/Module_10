@@ -1,0 +1,27 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(8px);
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+
+.modal {
+  	background-color: var(--color-surface);
+	border: 2px solid var(--color-border);
+
+    padding: 24px;
+    width: 800px;
+
+    margin: 0 12px;
+}
+
+@media (max-width: 480px) {
+    .modal {
+        padding: 12px;
+    }
+}
