@@ -1,23 +1,22 @@
 import Button from "@/components/ui/Button";
-import s from "./PostForm.module.scss"
+import s from "./PostForm.module.scss";
 import React, { useState } from "react";
-import { useSocial } from "@/context/SocialContext";
 import { useUser } from "@/context/UserContext";
+import { usePostsContext } from "@/context/PostsContext";
 
-type ImageType =  {
+type ImageType = {
     link: string;
     name: string;
-} | null
+} | null;
 
-export default function PostForm({onClose}: {onClose: () => void}) {
-    const { state, dispatch } = useSocial();
-    const { userId } = useUser();
-
-    const user = state.users.find(user => user.id === userId);
+export default function PostForm({ onClose }: { onClose: () => void }) {
+    const { user } = useUser();
+    const { createPost } = usePostsContext();
 
     const [isImageDragging, setIsImageDragging] = useState(false);
     const [image, setImage] = useState<ImageType>(null);
     const [description, setDescription] = useState("");
+    const [title, setTitle] = useState("");
 
     const handleFileSelect = (file?: File) => {
         if (!file) {
@@ -26,45 +25,55 @@ export default function PostForm({onClose}: {onClose: () => void}) {
 
         setImage({
             link: URL.createObjectURL(file),
-            name: file.name
+            name: file.name,
         });
     };
 
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!user || !description) {
+        if (!user || !description || !title) {
             return;
         }
 
-        dispatch({
-            type: "CREATE_POST",
-            payload: {
-                authorId: user.id, 
-                text: description,
-                image: image?.link
-            }
+        await createPost({
+            title,
+            content: description,
+            image: image?.link,
         });
 
         onClose();
-    }
+    };
 
     return (
-        <form className={s.form} onSubmit={e => handleSubmit(e)}>
+        <form className={s.form} onSubmit={(e) => handleSubmit(e)}>
             <div className={s.heading}>
                 Create a new post
-                <button onClick={onClose}>✕</button>
+                <button onClick={onClose} type="button">✕</button>
             </div>
 
-            <label htmlFor="description">
-                <i className="icon-pen"/> Description
+            <label htmlFor="title">
+                <i className="icon-mail" /> Post Title
             </label>
-            <input 
-                type="text" 
-                id="description" 
-                className={`${s.textInput} ${s.descriptionInput}`} 
+            <input
+                type="text"
+                id="title"
+                className={`${s.textInput} ${s.titleInput}`}
+                placeholder="Enter post title"
+                value={title}
+                onChange={(e) => setTitle(e.currentTarget.value)}
+            />
+
+            <label htmlFor="description">
+                <i className="icon-pen" /> Description
+            </label>
+            <input
+                type="text"
+                id="description"
+                className={`${s.textInput} ${s.descriptionInput}`}
                 placeholder="Write description here..."
                 value={description}
-                onChange={e => setDescription(e.currentTarget.value)}/>
+                onChange={(e) => setDescription(e.currentTarget.value)}
+            />
 
             <label
                 className={`${s.imgField} ${isImageDragging ? s.dragging : ""}`}
@@ -86,20 +95,22 @@ export default function PostForm({onClose}: {onClose: () => void}) {
                     type="file"
                     accept="image/*"
                     hidden
-                    onChange={(e) =>
-                        handleFileSelect(e.target.files?.[0])
-                    }
+                    onChange={(e) => handleFileSelect(e.target.files?.[0])}
                 />
 
                 {image ? (
                     <>
-                        <img src={image.link} alt="your image" className={s.previewImage}/>
+                        <img
+                            src={image.link}
+                            alt="your image"
+                            className={s.previewImage}
+                        />
                         <h4 className={s.previewName}>{image.name}</h4>
                     </>
                 ) : (
                     <>
-                        <i className={`${s.importIcon} icon-import`}/>
-                    
+                        <i className={`${s.importIcon} icon-import`} />
+
                         <div>
                             <p className={s.imgFieldTitle}>
                                 Select a file or drag and drop here
@@ -114,7 +125,7 @@ export default function PostForm({onClose}: {onClose: () => void}) {
             </label>
 
             <div className={s.footer}>
-                <Button text="Create" className={s.button}/>
+                <Button className={s.button}>Create</Button>
             </div>
         </form>
     );

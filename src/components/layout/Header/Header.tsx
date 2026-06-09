@@ -1,16 +1,13 @@
 import { useUser } from "@/context/UserContext";
 import s from "./Header.module.scss"
-import { useSocial } from "@/context/SocialContext";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { getAssetUrl } from '@/utils/getAssetUrl';
 
 export default function Header() {
-    const { userId } = useUser();
-    const { state } = useSocial();
+    const { user } = useUser();
 
     const [menuOpen, setMenuOpen] = useState(false)
-    const user = state.users.find(user => user.id === userId);
 
     return (
         <header className={s.header}>
@@ -20,9 +17,9 @@ export default function Header() {
             </Link>
 
             {user ? (
-                <Link className={s.user} to={`/profile/info/${user.id}`}>
-                    <img src={getAssetUrl(user.userIcon)} alt="avatar" />
-                    {user.userFullName}
+                <Link className={s.user} to={`/profile/info/`}>
+                    <img src={getAssetUrl(user.profileImage)} alt="avatar" />
+                    {user.firstName + " " + user.secondName}
                 </Link>
             ) : (
                 <div className={s.links}>
@@ -47,16 +44,16 @@ export default function Header() {
                             </Link>
 
                             {user && (
-                                <Link className={s.user} to={`/profile/info/${user.id}`}>
-                                    <img src={getAssetUrl(user.userIcon)} alt="avatar" />
+                                <Link className={s.user} to={`/profile/info/`}>
+                                    <img src={getAssetUrl(user.profileImage)} alt="avatar" />
                                 </Link>
                             )}
                         </div>
 
                         {user ? (
                             <>
-                                <Link to={`/profile/info/${userId}`} className={s.menuButton}>Profile info</Link>
-                                <Link to={`/profile/stats/${userId}`} className={s.menuButton}>Statistics</Link>
+                                <Link to={`/profile/info/`} className={s.menuButton}>Profile info</Link>
+                                <Link to={`/profile/stats/`} className={s.menuButton}>Statistics</Link>
                             </>
                         ) : (
                             <>
