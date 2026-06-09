@@ -26,6 +26,8 @@ export default function PostCard({ post, onLike }: PostCardProps) {
                 </span>
             </div>
 
+            <h3 className={s.title}>{post.title}</h3>
+
             {post.image && (
                 <img src={getAssetUrl(post.image)} alt="" className={s.image} />
             )}

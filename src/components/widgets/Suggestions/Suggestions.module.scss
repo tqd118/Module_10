@@ -2,6 +2,8 @@
     position: absolute;
     top: 24px;
     right: 24px;
+
+    z-index: var(--z-base);
 }
 
 .field {
@@ -44,7 +46,7 @@
     }
 }
 
-@media (max-width: 1480px) {
+@media (max-width: 1440px) {
     .suggestions {
         display: none;
     }

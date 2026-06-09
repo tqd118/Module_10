@@ -16,6 +16,7 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
     const [isImageDragging, setIsImageDragging] = useState(false);
     const [image, setImage] = useState<ImageType>(null);
     const [description, setDescription] = useState("");
+    const [title, setTitle] = useState("");
 
     const handleFileSelect = (file?: File) => {
         if (!file) {
@@ -30,12 +31,12 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!user || !description) {
+        if (!user || !description || !title) {
             return;
         }
 
         await createPost({
-            title: "Post title",
+            title,
             content: description,
             image: image?.link,
         });
@@ -47,8 +48,20 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
         <form className={s.form} onSubmit={(e) => handleSubmit(e)}>
             <div className={s.heading}>
                 Create a new post
-                <button onClick={onClose}>✕</button>
+                <button onClick={onClose} type="button">✕</button>
             </div>
+
+            <label htmlFor="title">
+                <i className="icon-mail" /> Post Title
+            </label>
+            <input
+                type="text"
+                id="title"
+                className={`${s.textInput} ${s.titleInput}`}
+                placeholder="Enter post title"
+                value={title}
+                onChange={(e) => setTitle(e.currentTarget.value)}
+            />
 
             <label htmlFor="description">
                 <i className="icon-pen" /> Description

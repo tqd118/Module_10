@@ -18,6 +18,12 @@
     --color-success: #ff8811;
 
     --font-main: "Inter", sans-serif;
+
+    --z-base: 0;
+    --z-modal: 100;
+    --z-header: 200;
+    --z-overlay: 300;
+    --z-toast: 400;
 }
 
 :root[data-theme="dark"] {
@@ -57,7 +63,7 @@ body {
     flex-direction: column;
     gap: 12px;
 
-    z-index: 100;
+    z-index: var(--z-toast);
 }
 
 .toast {

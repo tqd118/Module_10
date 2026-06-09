@@ -69,13 +69,18 @@ describe("PostForm", () => {
         render(<PostForm onClose={onClose} />);
 
         await userEvent.type(
+            screen.getByPlaceholderText("Enter post title"),
+            "My post title"
+        );
+
+        await userEvent.type(
             screen.getByPlaceholderText("Write description here..."),
             "My post description"
         );
         await userEvent.click(screen.getByText("Create"));
 
         expect(createPost).toHaveBeenCalledWith(
-            expect.objectContaining({ content: "My post description" })
+            expect.objectContaining({ content: "My post description", title: "My post title" })
         );
         expect(onClose).toHaveBeenCalled();
     });

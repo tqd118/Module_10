@@ -17,7 +17,7 @@ export default function Header() {
             </Link>
 
             {user ? (
-                <Link className={s.user} to={`/profile/info/${user.id}`}>
+                <Link className={s.user} to={`/profile/info/`}>
                     <img src={getAssetUrl(user.profileImage)} alt="avatar" />
                     {user.firstName + " " + user.secondName}
                 </Link>
@@ -44,7 +44,7 @@ export default function Header() {
                             </Link>
 
                             {user && (
-                                <Link className={s.user} to={`/profile/info/${user.id}`}>
+                                <Link className={s.user} to={`/profile/info/`}>
                                     <img src={getAssetUrl(user.profileImage)} alt="avatar" />
                                 </Link>
                             )}
@@ -52,8 +52,8 @@ export default function Header() {
 
                         {user ? (
                             <>
-                                <Link to={`/profile/info/${user.id}`} className={s.menuButton}>Profile info</Link>
-                                <Link to={`/profile/stats/${user.id}`} className={s.menuButton}>Statistics</Link>
+                                <Link to={`/profile/info/`} className={s.menuButton}>Profile info</Link>
+                                <Link to={`/profile/stats/`} className={s.menuButton}>Statistics</Link>
                             </>
                         ) : (
                             <>

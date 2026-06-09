@@ -4,6 +4,7 @@ import MainLayout from "@/components/layout/MainLayout";
 import HomePage from "@/pages/Home";
 import Error404 from "@/pages/Error404";
 import Error from "@/pages/Error";
+import ProtectedLayout from "@/components/layout/ProtectedLayout";
 
 const LoginPage = lazy(() => import("@/pages/Login"));
 const RegisterPage = lazy(() => import("@/pages/Register"));
@@ -32,13 +33,18 @@ export const router = createHashRouter([
 					</Suspense>
 				)
 			},
-			{ 
-				path: "profile/:page/:userId", 
-				element: (
-					<Suspense fallback={<div>Loading</div>}>
-						<ProfilePage />
-					</Suspense>
-				)
+			{
+				element: <ProtectedLayout />,
+				children: [
+					{ 
+						path: "profile/:page", 
+						element: (
+							<Suspense fallback={<div>Loading</div>}>
+								<ProfilePage />
+							</Suspense>
+						)
+					}
+				],
 			},
 			{ path: "*", element: <Error404 /> },
 		],

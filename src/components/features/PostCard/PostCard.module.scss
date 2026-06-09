@@ -34,6 +34,10 @@
             color: var(--color-text-secondary);
         }
     }
+
+    .title {
+        color: var(--color-text-primary);
+    }
     
     .image {
         width: 100%;
@@ -48,7 +52,7 @@
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .post {
         background-color: var(--color-bg);
         border-left: none;
