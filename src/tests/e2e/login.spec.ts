@@ -1,39 +1,63 @@
 import { test, expect } from "@playwright/test";
 
+const TEST_USER = {
+	email: "helena.hills@social.com",
+	password: "password789",
+};
+
 test.describe("Login page", () => {
-    test("opens login page", async ({ page }) => {
-        await page.goto("/Module_10/#/login");
-        await expect(
-            page.getByRole("button", { name: /Sign In/i })
-        ).toBeVisible();
-    });
+	test.beforeEach(async ({ page }) => {
+		await page.goto("/#/login");
+	});
 
-    test("shows validation errors", async ({ page }) => {
-        await page.goto("/Module_10/#/login");
+	test("renders login page", async ({ page }) => {
+		await expect(page.getByRole("heading", { name: /sign in/i })).toBeVisible();
+		await expect(page.getByLabel("Email")).toBeVisible();
+		await expect(page.getByLabel("Password")).toBeVisible();
+		await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
+	});
 
-        await page.getByRole("button", {
-            name: /Sign In/i,
-        }).click();
+	test("renders errors when input fields are empty", async ({ page }) => {
+		await page.getByRole("button", { name: /sign in/i }).click();
 
-        await expect(page.getByText(/Email is/i)).toBeVisible();
-    });
+		await expect(page.getByText(/email/i).first()).toBeVisible();
+		await expect(page.getByText(/password/i).first()).toBeVisible();
+		await expect(page).toHaveURL(/#\/login/);
+	});
 
-    test("allows entering credentials", async ({ page }) => {
-        await page.goto("/Module_10/#/login");
+	test("render error when email format is incorrect", async ({ page }) => {
+		await page.getByLabel("Email").fill("test@mail");
+		await page.getByLabel("Password").fill("somepassword");
+		await page.getByRole("button", { name: /sign in/i }).click();
 
-        await page.fill('input[type="email"]', "test@test.com");
+		await expect(page.getByText(/email is not valid/i)).toBeVisible();
+	});
 
-        await page.fill(
-            'input[type="password"]',
-            "123456"
-        );
+	test("successfuly logins and navigate to home page", async ({ page }) => {
+		await page.getByLabel("Email").fill(TEST_USER.email);
+		await page.getByLabel("Password").fill(TEST_USER.password);
 
-        await expect(
-            page.locator('input[type="email"]')
-        ).toHaveValue("test@test.com");
+		await page.getByRole("button", { name: /sign in/i }).click();
 
-        await expect(
-            page.locator('input[type="password"]')
-        ).toHaveValue("123456");
-    });
+		await expect(page.getByText(/succesfuly sign in/i)).toBeVisible();
+		await expect(page).toHaveURL(/#\/$/);
+	});
+
+	test("renders error when password is incorrect", async ({ page }) => {
+		await page.getByLabel("Email").fill(TEST_USER.email);
+		await page.getByLabel("Password").fill("wrongPassword");
+
+		await page.getByRole("button", { name: /sign in/i }).click();
+
+		await expect(page.getByText(/incorrect email or password/i)).toBeVisible();
+		await expect(page).toHaveURL(/#\/login/);
+	});
+
+	test("renders link to register page", async ({ page }) => {
+		const signUpLink = page.getByRole("link", { name: /sign up/i });
+
+		await expect(signUpLink).toBeVisible();
+		await signUpLink.click();
+		await expect(page).toHaveURL(/#\/register/);
+	});
 });

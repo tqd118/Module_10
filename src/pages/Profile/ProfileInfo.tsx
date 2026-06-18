@@ -55,7 +55,7 @@ export default function ProfileInfo() {
             newErrors.username = "Username is required";
             showToast(newErrors.username, "error");
         } else if (!/[a-zA-Z0-9_]+$/.test(username)) {
-            newErrors.username = "Username must start with @ and contain only letters, numbers and _";
+            newErrors.username = "Username must contain only letters, numbers and _";
             showToast(newErrors.username, "error");
         }
 
@@ -103,14 +103,6 @@ export default function ProfileInfo() {
         if (!hasChanges) {
             return;
         }
-
-        // dispatch({
-        //     type: "UPDATE_USER",
-        //     payload: {
-        //         id: user.id,
-        //         data: updatedData
-        //     }
-        // });
 
         updateProfile(updatedData)
 

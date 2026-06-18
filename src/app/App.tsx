@@ -5,8 +5,13 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { ToastProvider } from "@/context/ToastsContext";
 
 import { useInitAuth } from "@/hooks/useInitAuth"; 
+import useTest from "@/hooks/useTest";
 
 export default function App() {
+
+    if(true) {
+        useTest()
+    }
     return (
         <ThemeProvider>
             <UserProvider>
