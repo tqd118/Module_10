@@ -1,22 +1,17 @@
 import s from "./Profile.module.scss"
 import { useNavigate, useParams } from "react-router-dom";
 import ProfileInfo from "./ProfileInfo";
-import type { User } from "@/types/social";
 
 
 export default function Profile() {
-    const { userId, page } = useParams<{userId: User["id"], page: "info" | "stats"}>();
+    const { page } = useParams<{page: "info" | "stats"}>();
     const navigate = useNavigate();
-
-    if (userId === undefined) {
-        throw new Error("User id not found");
-    }
 
     const switchPage = () => {
         if (page === "info") {
-            navigate(`/profile/stats/${userId}`);
+            navigate(`/profile/stats/`);
         } else {
-            navigate(`/profile/info/${userId}`);
+            navigate(`/profile/info/`);
         }
     }
 

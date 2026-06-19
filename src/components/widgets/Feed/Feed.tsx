@@ -1,13 +1,24 @@
 import PostCard from "@/components/features/PostCard";
 import s from "./Feed.module.scss"
-import { useSocial } from "@/context/SocialContext";
+import { useEffect } from "react";
+import { usePostsContext } from "@/context/PostsContext";
 
 export default function Feed() {
-    const {state} = useSocial();
+    const { posts, fetchPosts, toggleLike, loading, error } = usePostsContext();
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
+
+    let content = null;
+
+    if (!loading && !error) {
+        content = posts.map(post => <PostCard post={post} onLike={toggleLike} key={post.id}/>)
+    }
 
     return (
         <div className={s.feed}>
-            {state.posts.map(post => <PostCard post={post} key={post.id}/>)}
+            {content}
         </div>
     )
 }

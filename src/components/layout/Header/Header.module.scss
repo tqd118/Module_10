@@ -7,7 +7,7 @@
     background-color: var(--color-surface);
 
     padding: 12px 24px;
-    z-index: 20;
+    z-index: var(--z-header);
 
     display: flex;
     justify-content: space-between;
@@ -87,7 +87,7 @@
     inset: 0;
     backdrop-filter: blur(8px);
     background: transparent;
-    z-index: 30;
+    z-index: var(--z-overlay);
     display: none;
 
     .menu {

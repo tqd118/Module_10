@@ -1,16 +1,16 @@
 import { useState } from "react";
 import s from "./Register.module.scss"
 import Button from "@/components/ui/Button"
-import { useSocial } from "@/context/SocialContext";
-import { useUser } from "@/context/UserContext";
 import InputField from "@/components/ui/InputField";
-import { useNavigate, Link } from "react-router-dom";
-import type { User } from "@/types/social";
 import { validateEmail, validatePassword } from "@/utils/validation";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/context/ToastsContext";
+import { Link } from "react-router-dom";
+
 
 export default function Register() {
-    const { state, dispatch } = useSocial();
-	const { setUserId } = useUser();
+	const { signup } = useAuth();
+	const { showToast } = useToast()
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -18,9 +18,9 @@ export default function Register() {
 	const [emailError, setEmailError] = useState("");
 	const [passwordError, setPasswordError] = useState("");
 
-	const navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
 
-	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		const emailErr = validateEmail(email);
 		const passErr = validatePassword(password);
@@ -30,25 +30,16 @@ export default function Register() {
 
 		if (emailErr || passErr) return;
 
-        const exists = state.users.some(u => u.userMail === email);
-        if (exists) {
-            setEmailError("User already exists");
-            return;
-        }
-
-        const id: User["id"] = `user-${ crypto.randomUUID() }`;
-
-        dispatch({
-            type: "CREATE_USER",
-            payload: {
-                id,
-                userMail: email,
-                userPassword: password
-            }
-        })
-
-		setUserId(id);
-		navigate("/");
+        try {
+			await signup(email, password);
+			//await login(email, password);
+			//navigate("/");
+			showToast("Succesfuly registered", "success");
+		} catch (e) {
+			setPasswordError(e instanceof Error ? e.message : "Registration failed");
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	const passwordStrength = password.length >= 8 ? "Your password is strong" : "";
@@ -82,7 +73,9 @@ export default function Register() {
 					success={!passwordError && password.length > 0}
 					hint={passwordStrength}/>
 
-				<Button text="Sign Up"/>
+				<Button disabled={loading}>
+					Sign Up
+				</Button>
 			</form>
 
 			<p className={s.policy}>By clicking continue, you agree to our <a href="#">Terms of Service</a><br/> and <a href="#">Privacy Policy</a></p>

@@ -1,12 +1,12 @@
 import s from "./Profile.module.scss";
 import Button from "@/components/ui/Button";
-import { useSocial } from "@/context/SocialContext";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useUser } from "@/context/UserContext";
-import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/context/ThemeContext";
 import { useToast } from "@/context/ToastsContext";
 import { getAssetUrl } from '@/utils/getAssetUrl';
+import { useProfile } from "@/hooks/useProfile";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Errors {
     userFullName?: string;
@@ -16,58 +16,61 @@ interface Errors {
 }
 
 export default function ProfileInfo() {
-    const navigate = useNavigate();
-
-    const { state, dispatch } = useSocial();
+    const { updateProfile } = useProfile();
     const { theme, toggle } = useTheme();
-    const { userId, setUserId } = useUser();
+    const { user } = useUser();
     const { showToast } = useToast();
+    const { logout } = useAuth();
 
-    const user = state.users.find(u => u.id === userId);
-
-    useEffect(() => {
-        if (!user) {
-            navigate("/login", { replace: true });
-        }
-    }, [user, navigate]);
-
-    const [userIcon, setUserIcon] = useState("");
-    const [userFullName, setUserFullName] = useState(user?.userFullName ?? "");
+    const [profileImage, setProfileImage] = useState("");
+    const [firstName, setFirstName] = useState(user?.firstName ?? "");
+    const [secondName, setSecondName] = useState(user?.secondName ?? "");
     const [username, setUsername] = useState(user?.username ?? "");
-    const [userMail, setUserMail] = useState(user?.userMail ?? "");
-    const [userDescription, setUserDescription] = useState(user?.userDescription ?? "");
+    const [email, setEmail] = useState(user?.email ?? "");
+    const [description, setDescription] = useState(user?.description ?? "");
 
     const [errors, setErrors] = useState<Errors>({});
 
     const handleIconSelect = (file?: File) => {
         if (!file) return;
 
-        setUserIcon(URL.createObjectURL(file));
+        setProfileImage(URL.createObjectURL(file));
     };
+
+    const handleNameInput = (value: string) => {
+        const [firstName, secondName] = value.split(" ");
+        setFirstName(firstName);
+        setSecondName(secondName);
+    } 
 
     const validate = () => {
         const newErrors: Errors = {};
 
-        if (!userFullName.trim()) {
+        if (!firstName.trim() || !secondName.trim()) {
             newErrors.userFullName = "Full name is required";
+            showToast(newErrors.userFullName, "error");
         }
 
         if (!username.trim()) {
             newErrors.username = "Username is required";
-        } else if (!/^@[a-zA-Z0-9_]+$/.test(username)) {
-            newErrors.username =
-                "Username must start with @ and contain only letters, numbers and _";
+            showToast(newErrors.username, "error");
+        } else if (!/[a-zA-Z0-9_]+$/.test(username)) {
+            newErrors.username = "Username must start with @ and contain only letters, numbers and _";
+            showToast(newErrors.username, "error");
         }
 
-        if (!userMail.trim()) {
+        if (!email.trim()) {
             newErrors.userMail = "Email is required";
-        } else if (!/^\S+@\S+\.\S+$/.test(userMail)) {
+            showToast(newErrors.userMail, "error");
+        } else if (!/^\S+@\S+\.\S+$/.test(email)) {
             newErrors.userMail = "Invalid email";
+            showToast(newErrors.userMail, "error");
         }
 
-        if (userDescription.length > 200) {
-            newErrors.userDescription =
-                "Description must be less than 200 chars";
+        if (description.length > 200) {
+            newErrors.userDescription = "Description must be less than 200 chars";
+            showToast(newErrors.userDescription, "error");
+
         }
 
         setErrors(newErrors);
@@ -82,37 +85,42 @@ export default function ProfileInfo() {
         }
 
         const updatedData = {
-            userFullName,
-            userIcon: userIcon || user.userIcon,
+            firstName,
+            secondName,
+            profileImage: profileImage || user.profileImage,
             username,
-            userMail,
-            userDescription
+            email,
+            description
         };
 
-        const hasChanges = updatedData.userFullName !== user.userFullName ||
-                           updatedData.userIcon !== user.userIcon ||
+        const hasChanges = updatedData.firstName !== user.firstName ||
+                           updatedData.secondName !== user.secondName ||
+                           updatedData.profileImage !== user.profileImage ||
                            updatedData.username !== user.username ||
-                           updatedData.userMail !== user.userMail ||
-                           updatedData.userDescription !== user.userDescription;
+                           updatedData.email !== user.email ||
+                           updatedData.description !== user.description;
 
         if (!hasChanges) {
             return;
         }
 
-        dispatch({
-            type: "UPDATE_USER",
-            payload: {
-                id: user.id,
-                data: updatedData
-            }
-        });
+        // dispatch({
+        //     type: "UPDATE_USER",
+        //     payload: {
+        //         id: user.id,
+        //         data: updatedData
+        //     }
+        // });
+
+        updateProfile(updatedData)
 
         showToast("Profile info has been updated successfully", "success");
+
     };
 
     const handleLogout = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setUserId(null);
+        logout();
     }
 
     return (
@@ -121,17 +129,15 @@ export default function ProfileInfo() {
                 <h2 className={s.title}>Edit profile</h2>
 
                 <div className={s.user}>
-                    <img src={getAssetUrl(userIcon || user?.userIcon)} alt="avatar" />
+                    <img src={ profileImage || getAssetUrl(user?.profileImage) || "/Module_10/assets/blank-user.png" } alt="avatar" />
 
                     <div>
                         <label className={s.userNameChange}>
                             <input
                                 type="text"
                                 id="userNameInput"
-                                value={userFullName}
-                                onChange={e =>
-                                    setUserFullName(e.currentTarget.value)
-                                }
+                                value={firstName + " " + secondName}
+                                onChange={e => handleNameInput(e.currentTarget.value)}
                             />
                         </label>
 
@@ -185,8 +191,8 @@ export default function ProfileInfo() {
                         type="email"
                         className={s.profileInput}
                         placeholder="email@domain.com"
-                        value={userMail}
-                        onChange={e => setUserMail(e.currentTarget.value)}
+                        value={email}
+                        onChange={e => setEmail(e.currentTarget.value)}
                     />
 
                     {errors.userMail && (
@@ -202,14 +208,14 @@ export default function ProfileInfo() {
                     <textarea
                         className={s.profileInput}
                         placeholder="Write description here..."
-                        value={userDescription}
+                        value={description}
                         onChange={e =>
-                            setUserDescription(e.currentTarget.value)
+                            setDescription(e.currentTarget.value)
                         }
                     />
 
                     <span className={s.descriptionWarn}>
-                        {userDescription.length >= 200 ? (
+                        {description.length >= 200 ? (
 							<span className={`icon-info ${s.error}`}>Reached the 200 chars limit</span>
 						) : (
 							<span className="icon-info">Max 200 chars</span>
@@ -223,10 +229,9 @@ export default function ProfileInfo() {
                     )}
                 </label>
 
-                <Button
-                    text="Save Profile Changes"
-                    className={s.saveInfoButton}
-                />
+                <Button className={s.saveInfoButton}>
+                    Save Profile Changes
+                </Button>
             </form>
 
             <form className={s.preferences} onSubmit={e => handleLogout(e)}>
@@ -246,10 +251,9 @@ export default function ProfileInfo() {
 
                 <h2 className={s.title}>Actions</h2>
 
-                <Button
-                    text="Logout"
-                    className={s.logoutButton}
-                />
+                <Button className={s.logoutButton}>
+                    Logout
+                </Button>
             </form>
         </div>
     );
