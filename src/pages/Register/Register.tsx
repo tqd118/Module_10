@@ -2,47 +2,47 @@ import { useState } from "react";
 import s from "./Register.module.scss"
 import Button from "@/components/ui/Button"
 import InputField from "@/components/ui/InputField";
-import { validateEmail, validatePassword } from "@/utils/validation";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/context/ToastsContext";
 import { Link } from "react-router-dom";
+import { useFormik } from 'formik';
+import { object, string }from 'yup';
 
+const validationSchema = object().shape({
+	email: string()
+		.matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/,"Email is not valid")
+		.required("Email is required"),
+	password: string()
+		.min(6, "Password too short")
+		.required("Password is required")
+});
 
 export default function Register() {
 	const { signup } = useAuth();
 	const { showToast } = useToast()
 
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-
-	const [emailError, setEmailError] = useState("");
-	const [passwordError, setPasswordError] = useState("");
-
 	const [loading, setLoading] = useState(false);
 
-	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-		e.preventDefault()
-		const emailErr = validateEmail(email);
-		const passErr = validatePassword(password);
-
-		setEmailError(emailErr);
-		setPasswordError(passErr);
-
-		if (emailErr || passErr) return;
-
-        try {
-			await signup(email, password);
-			//await login(email, password);
-			//navigate("/");
-			showToast("Succesfuly registered", "success");
-		} catch (e) {
-			setPasswordError(e instanceof Error ? e.message : "Registration failed");
-		} finally {
-			setLoading(false);
+	const formik = useFormik({
+		initialValues: {
+			email: "",
+			password: ""
+		},
+		validationSchema,
+		onSubmit: async values => {
+			setLoading(true);
+			try {
+				await signup(values.email, values.password);
+				showToast("Succesfuly registered", "success");
+			} catch (e) {
+				formik.errors.password = e instanceof Error ? e.message : "Registration failed";
+			} finally {
+				setLoading(false);
+			}
 		}
-	};
+	});
 
-	const passwordStrength = password.length >= 8 ? "Your password is strong" : "";
+	const passwordStrength = formik.values.password.length >= 8 ? "Your password is strong" : "";
 
 	return (
 		<div className={s.page}>
@@ -53,27 +53,35 @@ export default function Register() {
 				</p>
 			</div>
 
-			<form className={s.form} onSubmit={e => handleSubmit(e)}>
+			<form className={s.form} onSubmit={formik.handleSubmit}>
 				<InputField
 					type="email"
+					name="email"
 					label="Email"
+
 					placeholder="Enter email"
-					value={email}
-					onChange={setEmail}
-					error={emailError}
-					success={!emailError && email.length > 0}/>
+
+					value={formik.values.email}
+					onChange={formik.handleChange}
+
+					error={formik.touched.email ? formik.errors.email : ""}
+					success={formik.touched.email && !formik.errors.email}/>
 
 				<InputField
 					type="password"
+					name="password"
 					label="Password"
+
 					placeholder="Enter password..."
-					value={password}
-					onChange={setPassword}
-					error={passwordError}
-					success={!passwordError && password.length > 0}
+
+					value={formik.values.password}
+					onChange={formik.handleChange}
+
+					error={formik.touched.password ? formik.errors.password : ""}
+					success={formik.touched.password && !formik.errors.password}
 					hint={passwordStrength}/>
 
-				<Button disabled={loading}>
+				<Button disabled={loading} type="submit">
 					Sign Up
 				</Button>
 			</form>

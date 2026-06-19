@@ -136,7 +136,7 @@ describe("ProfileInfo", () => {
         expect(updateProfile).not.toHaveBeenCalled();
     });
 
-    it("shows error toast and does not submit when username is empty", async () => {
+    it("shows error when username is empty and does not submit", async () => {
         const user = userEvent.setup();
 
         render(<ProfileInfo />);
@@ -146,25 +146,26 @@ describe("ProfileInfo", () => {
 
         await user.click(screen.getByText("Save Profile Changes"));
 
-        expect(showToast).toHaveBeenCalledWith("Username is required", "error");
+        expect(await screen.findByText("Username is required")).toBeInTheDocument();
         expect(updateProfile).not.toHaveBeenCalled();
     });
 
-    it("shows error toast and does not submit when full name is empty", async () => {
+    it("shows error when full name is empty and does not submit", async () => {
         const user = userEvent.setup();
 
         render(<ProfileInfo />);
 
         const nameInput = screen.getByDisplayValue("John Doe");
         await user.clear(nameInput);
+        await user.tab(); // trigger onBlur to mark fields as touched
 
         await user.click(screen.getByText("Save Profile Changes"));
 
-        expect(showToast).toHaveBeenCalledWith("Full name is required", "error");
+        expect(await screen.findByText("First name is required")).toBeInTheDocument();
         expect(updateProfile).not.toHaveBeenCalled();
     });
 
-    it("shows error toast when username contains invalid characters", async () => {
+    it("shows error when username contains invalid characters and does not submit", async () => {
         const user = userEvent.setup();
 
         render(<ProfileInfo />);
@@ -175,11 +176,11 @@ describe("ProfileInfo", () => {
 
         await user.click(screen.getByText("Save Profile Changes"));
 
-        expect(showToast).toHaveBeenCalledWith("Username must contain only letters, numbers and _", "error");
+        expect(await screen.findByText("Username must contain only letters, numbers and _")).toBeInTheDocument();
         expect(updateProfile).not.toHaveBeenCalled();
     });
 
-    it("shows error toast and does not submit when email is empty", async () => {
+    it("shows error when email is empty and does not submit", async () => {
         const user = userEvent.setup();
 
         render(<ProfileInfo />);
@@ -189,11 +190,11 @@ describe("ProfileInfo", () => {
 
         await user.click(screen.getByText("Save Profile Changes"));
 
-        expect(showToast).toHaveBeenCalledWith("Email is required", "error");
+        expect(await screen.findByText("Email is required")).toBeInTheDocument();
         expect(updateProfile).not.toHaveBeenCalled();
     });
 
-    it("shows error toast when description exceeds 200 characters", async () => {
+    it("shows description limit warning when description exceeds 200 characters", async () => {
         const user = userEvent.setup();
 
         render(<ProfileInfo />);
@@ -204,7 +205,7 @@ describe("ProfileInfo", () => {
 
         await user.click(screen.getByText("Save Profile Changes"));
 
-        expect(showToast).toHaveBeenCalledWith("Description must be less than 200 chars", "error");
+        expect(await screen.findByText("Reached the 200 chars limit")).toBeInTheDocument();
         expect(updateProfile).not.toHaveBeenCalled();
     });
 
@@ -215,7 +216,7 @@ describe("ProfileInfo", () => {
 
         const textarea = screen.getByDisplayValue("Hello world");
         await user.clear(textarea);
-        await user.type(textarea, "a".repeat(200));
+        await user.type(textarea, "a".repeat(201));
 
         expect(screen.getByText("Reached the 200 chars limit")).toBeInTheDocument();
     });

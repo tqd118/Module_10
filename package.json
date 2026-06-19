@@ -11,11 +11,15 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.12.0",
     "@sidekick-monorepo/internship-backend": "file:../Downloads/materialgram/sidekick-monorepo-internship-backend-0.0.1/package",
     "axios": "^1.16.1",
+    "formik": "^2.4.9",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "react-router-dom": "^7.15.1"
+    "react-hook-form": "^7.79.0",
+    "react-router-dom": "^7.15.1",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",

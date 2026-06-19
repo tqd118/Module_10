@@ -1,19 +1,36 @@
 import s from "./Profile.module.scss";
 import Button from "@/components/ui/Button";
-import { useState } from "react";
 import { useUser } from "@/context/UserContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useToast } from "@/context/ToastsContext";
 import { getAssetUrl } from '@/utils/getAssetUrl';
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
+import { useFormik } from "formik";
+import { object, string }from 'yup';
+import { useState } from "react";
 
-interface Errors {
-    userFullName?: string;
-    username?: string;
-    userMail?: string;
-    userDescription?: string;
-}
+const validationSchema = object().shape({
+  firstName: string().required("First name is required"),
+  secondName: string().required("Second name is required"),
+  
+  username:
+    string()
+        .required("Username is required")
+        .matches(
+            /^[a-zA-Z0-9_]+$/,
+            "Username must contain only letters, numbers and _"
+        ),
+
+  email:
+    string()
+        .required("Email is required")
+        .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email"),
+
+  description:
+    string()
+        .max(200),
+});
 
 export default function ProfileInfo() {
     const { updateProfile } = useProfile();
@@ -22,126 +39,74 @@ export default function ProfileInfo() {
     const { showToast } = useToast();
     const { logout } = useAuth();
 
-    const [profileImage, setProfileImage] = useState("");
-    const [firstName, setFirstName] = useState(user?.firstName ?? "");
-    const [secondName, setSecondName] = useState(user?.secondName ?? "");
-    const [username, setUsername] = useState(user?.username ?? "");
-    const [email, setEmail] = useState(user?.email ?? "");
-    const [description, setDescription] = useState(user?.description ?? "");
+    const formik = useFormik({
+        initialValues: {
+            profileImage: user?.profileImage,
+            firstName: user?.firstName,
+            secondName: user?.secondName,
+            username: user?.username,
+            email: user?.email,
+            description: user?.description
+        },
+        validationSchema,
+        enableReinitialize: true,
+        onSubmit: values => {
+            if (!user) {
+                return;
+            }
 
-    const [errors, setErrors] = useState<Errors>({});
+            const initial = formik.initialValues;
+            if ((Object.keys(initial) as Array<keyof typeof initial>)
+                .every(key => initial[key] === values[key])) return;
+
+            updateProfile(values);
+            showToast("Profile info has been updated successfully", "success");
+        }
+    })
 
     const handleIconSelect = (file?: File) => {
         if (!file) return;
-
-        setProfileImage(URL.createObjectURL(file));
-    };
-
-    const handleNameInput = (value: string) => {
-        const [firstName, secondName] = value.split(" ");
-        setFirstName(firstName);
-        setSecondName(secondName);
-    } 
-
-    const validate = () => {
-        const newErrors: Errors = {};
-
-        if (!firstName.trim() || !secondName.trim()) {
-            newErrors.userFullName = "Full name is required";
-            showToast(newErrors.userFullName, "error");
-        }
-
-        if (!username.trim()) {
-            newErrors.username = "Username is required";
-            showToast(newErrors.username, "error");
-        } else if (!/[a-zA-Z0-9_]+$/.test(username)) {
-            newErrors.username = "Username must contain only letters, numbers and _";
-            showToast(newErrors.username, "error");
-        }
-
-        if (!email.trim()) {
-            newErrors.userMail = "Email is required";
-            showToast(newErrors.userMail, "error");
-        } else if (!/^\S+@\S+\.\S+$/.test(email)) {
-            newErrors.userMail = "Invalid email";
-            showToast(newErrors.userMail, "error");
-        }
-
-        if (description.length > 200) {
-            newErrors.userDescription = "Description must be less than 200 chars";
-            showToast(newErrors.userDescription, "error");
-
-        }
-
-        setErrors(newErrors);
-
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!validate() || !user) {
-            return;
-        }
-
-        const updatedData = {
-            firstName,
-            secondName,
-            profileImage: profileImage || user.profileImage,
-            username,
-            email,
-            description
-        };
-
-        const hasChanges = updatedData.firstName !== user.firstName ||
-                           updatedData.secondName !== user.secondName ||
-                           updatedData.profileImage !== user.profileImage ||
-                           updatedData.username !== user.username ||
-                           updatedData.email !== user.email ||
-                           updatedData.description !== user.description;
-
-        if (!hasChanges) {
-            return;
-        }
-
-        updateProfile(updatedData)
-
-        showToast("Profile info has been updated successfully", "success");
-
-    };
+        formik.setFieldValue("profileImage", (URL.createObjectURL(file)));
+    }
 
     const handleLogout = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         logout();
     }
 
+    const { 
+        profileImage,
+        firstName,
+        secondName,
+        description,
+        email,
+        username
+    } = formik.values;
+
+    const { handleChange, errors } = formik;
+    const [fullNameInput, setFullNameInput] = useState(`${firstName} ${secondName}`.trim());
+
+
     return (
         <div className={s.info}>
-            <form className={s.profile} onSubmit={e => handleSubmit(e)}>
+            <form 
+                className={s.profile}
+                id="changeProfile"
+                onSubmit={formik.handleSubmit}>
+
                 <h2 className={s.title}>Edit profile</h2>
 
                 <div className={s.user}>
-                    <img src={ profileImage || getAssetUrl(user?.profileImage) || "/Module_10/assets/blank-user.png" } alt="avatar" />
+                    <img src={ getAssetUrl(profileImage) || "/Module_10/assets/blank-user.png" } alt="avatar" />
 
                     <div>
-                        <label className={s.userNameChange}>
-                            <input
-                                type="text"
-                                id="userNameInput"
-                                value={firstName + " " + secondName}
-                                onChange={e => handleNameInput(e.currentTarget.value)}
-                            />
-                        </label>
-
-                        {errors.userFullName && (
-                            <span className={s.error}>
-                                {errors.userFullName}
-                            </span>
-                        )}
+                        <span>
+                            {firstName + " " + secondName}
+                        </span>
 
                         <label
                             className={s.changePhoto}
-                            htmlFor="userIconChange"
+                            htmlFor="profileImage"
                         >
                             Change profile photo
                         </label>
@@ -149,7 +114,8 @@ export default function ProfileInfo() {
                         <input
                             hidden
                             type="file"
-                            id="userIconChange"
+                            id="profileImage"
+                            name="profileImage"
                             accept="image/*"
                             onChange={e =>
                                 handleIconSelect(e.target.files?.[0])
@@ -162,11 +128,15 @@ export default function ProfileInfo() {
                     <span className="icon-user">Username</span>
 
                     <input
-                        type="text"
+                        id="username"
+                        name="username"
+                        
                         className={s.profileInput}
                         placeholder="@username123"
+                        form="changeProfile"
+                        
                         value={username}
-                        onChange={e => setUsername(e.currentTarget.value)}
+                        onChange={handleChange}
                     />
 
                     {errors.username && (
@@ -177,19 +147,54 @@ export default function ProfileInfo() {
                 </label>
 
                 <label className={s.inputLabel}>
+                    <span className="icon-user">Full name</span>
+                    <input
+                        id="fullName"
+                        name="fullName"
+                        className={s.profileInput}
+                        placeholder="John Doe"
+                        form="changeProfile"
+                        value={fullNameInput}
+                        onChange={e => {
+                            const raw = e.target.value;
+                            setFullNameInput(raw);
+
+                            const [first = "", ...rest] = raw.split(" ");
+                            formik.setFieldValue("firstName", first.trim());
+                            formik.setFieldValue("secondName", rest.join(" ").trim());
+                        }}
+                        onBlur={() => {
+                            setFullNameInput(`${firstName} ${secondName}`.trim());
+                            formik.setFieldTouched("firstName", true);
+                            formik.setFieldTouched("secondName", true);
+                        }}/>
+                    {(formik.touched.firstName || formik.touched.secondName) &&
+                        (errors.firstName || errors.secondName) && (
+                        <span className={s.error}>
+                            {errors.firstName || errors.secondName}
+                        </span>
+                    )}
+                </label>
+
+                <label className={s.inputLabel}>
                     <span className="icon-mail">Email</span>
 
                     <input
+                        id="email"
+                        name="email"
+
                         type="email"
                         className={s.profileInput}
                         placeholder="email@domain.com"
+                        form="changeProfile"
+
                         value={email}
-                        onChange={e => setEmail(e.currentTarget.value)}
+                        onChange={handleChange}
                     />
 
-                    {errors.userMail && (
+                    {errors.email && (
                         <span className={s.error}>
-                            {errors.userMail}
+                            {errors.email}
                         </span>
                     )}
                 </label>
@@ -198,30 +203,31 @@ export default function ProfileInfo() {
                     <span className="icon-pen">Description</span>
 
                     <textarea
+                        id="description"
+                        name="description"
+
                         className={s.profileInput}
                         placeholder="Write description here..."
+                        form="changeProfile"
+
                         value={description}
-                        onChange={e =>
-                            setDescription(e.currentTarget.value)
-                        }
+                        onChange={handleChange}
                     />
 
                     <span className={s.descriptionWarn}>
-                        {description.length >= 200 ? (
+                        {errors.description ? (
 							<span className={`icon-info ${s.error}`}>Reached the 200 chars limit</span>
 						) : (
 							<span className="icon-info">Max 200 chars</span>
 						)}
                     </span>
-
-                    {errors.userDescription && (
-                        <span className={s.error}>
-                            {errors.userDescription}
-                        </span>
-                    )}
                 </label>
 
-                <Button className={s.saveInfoButton}>
+                <Button 
+                    className={s.saveInfoButton} 
+                    type="submit"
+                    form="changeProfile"
+                >
                     Save Profile Changes
                 </Button>
             </form>

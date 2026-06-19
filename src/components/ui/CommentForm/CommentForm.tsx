@@ -1,11 +1,14 @@
 import Button from "../Button";
 import s from "./CommentForm.module.scss";
 import { useUser } from "@/context/UserContext";
-import React, { useState } from "react";
+import { useForm,type SubmitHandler, } from "react-hook-form"
 
 interface CommentFormProps {
     postId: number;
     onCreateComment: (postId: number, text: string) => void;
+}
+interface Inputs {
+    content: string;
 }
 
 export default function CommentForm({
@@ -13,21 +16,27 @@ export default function CommentForm({
     onCreateComment,
 }: CommentFormProps) {
     const { userId } = useUser();
+    const {
+        register,
+        handleSubmit,
+        reset,
+    } = useForm<Inputs>({
+        defaultValues: {
+            content: ""
+        },
+    });
 
-    const [text, setText] = useState("");
-
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!text.trim() || !userId) {
+    const onSubmit: SubmitHandler<Inputs> = (data) => {
+        if (!data.content.trim() || !userId) {
             return;
         }
 
-        onCreateComment(postId, text);
-        setText("");
-    };
+        onCreateComment(postId, data.content);
+        reset();
+    }
 
     return (
-        <form className={s.form} onSubmit={(e) => handleSubmit(e)}>
+        <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
             <label htmlFor="comment" className={s.label}>
                 <span className={`${s.addCommentIcon} icon-pen`}>
                     Add a comment
@@ -36,12 +45,13 @@ export default function CommentForm({
                     id="comment"
                     className={s.textarea}
                     placeholder="Write description here..."
-                    value={text}
-                    onChange={(e) => setText(e.currentTarget.value)}
+                    {...register("content",
+                        { required: true }
+                    )}
                 />
             </label>
 
-            <Button className={s.submit}>Add a comment</Button>
+            <Button className={s.submit} type="submit">Add a comment</Button>
         </form>
     );
 }

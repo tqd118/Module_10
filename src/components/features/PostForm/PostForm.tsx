@@ -1,51 +1,58 @@
 import Button from "@/components/ui/Button";
 import s from "./PostForm.module.scss";
-import React, { useState } from "react";
-import { useUser } from "@/context/UserContext";
+import { useState } from "react";
 import { usePostsContext } from "@/context/PostsContext";
+import { useForm, type SubmitHandler } from "react-hook-form"
 
 type ImageType = {
     link: string;
     name: string;
 } | null;
 
+interface Inputs {
+    image: ImageType;
+    title: string;
+    description: string;
+}
+
 export default function PostForm({ onClose }: { onClose: () => void }) {
-    const { user } = useUser();
     const { createPost } = usePostsContext();
 
     const [isImageDragging, setIsImageDragging] = useState(false);
-    const [image, setImage] = useState<ImageType>(null);
-    const [description, setDescription] = useState("");
-    const [title, setTitle] = useState("");
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: { errors },
+    } = useForm<Inputs>()
 
     const handleFileSelect = (file?: File) => {
         if (!file) {
             return;
         }
 
-        setImage({
+        setValue("image", {
             link: URL.createObjectURL(file),
-            name: file.name,
-        });
+            name: file.name
+        }, { shouldValidate: true });
     };
 
-    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!user || !description || !title) {
-            return;
-        }
-
+    const onSubmit: SubmitHandler<Inputs> = async (data) => {
         await createPost({
-            title,
-            content: description,
-            image: image?.link,
+            title: data.title,
+            content: data.description,
+            image: data.image?.link,
         });
 
         onClose();
     };
 
+    const image = watch("image");
+
     return (
-        <form className={s.form} onSubmit={(e) => handleSubmit(e)}>
+        <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
             <div className={s.heading}>
                 Create a new post
                 <button onClick={onClose} type="button">✕</button>
@@ -59,9 +66,12 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
                 id="title"
                 className={`${s.textInput} ${s.titleInput}`}
                 placeholder="Enter post title"
-                value={title}
-                onChange={(e) => setTitle(e.currentTarget.value)}
+                
+                {...register("title", {
+                    required: true
+                })}
             />
+            {errors.title && <span>This field is required</span>}
 
             <label htmlFor="description">
                 <i className="icon-pen" /> Description
@@ -71,9 +81,12 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
                 id="description"
                 className={`${s.textInput} ${s.descriptionInput}`}
                 placeholder="Write description here..."
-                value={description}
-                onChange={(e) => setDescription(e.currentTarget.value)}
+                
+                {...register("description", {
+                    required: true
+                })}
             />
+            {errors.description && <span>This field is required</span>}
 
             <label
                 className={`${s.imgField} ${isImageDragging ? s.dragging : ""}`}
@@ -95,10 +108,13 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
                     type="file"
                     accept="image/*"
                     hidden
-                    onChange={(e) => handleFileSelect(e.target.files?.[0])}
+                    
+                    {...register("image", {
+                        onChange: (e) => handleFileSelect(e.target.files?.[0])
+                    })}
                 />
 
-                {image ? (
+                {image?.link ? (
                     <>
                         <img
                             src={image.link}
@@ -125,7 +141,7 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
             </label>
 
             <div className={s.footer}>
-                <Button className={s.button}>Create</Button>
+                <Button className={s.button} type="submit">Create</Button>
             </div>
         </form>
     );

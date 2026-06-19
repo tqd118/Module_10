@@ -6,6 +6,10 @@
 
     font-size: 14px;
 
+    span {
+        color: var(--color-error)
+    }
+
     .heading {
         font-size: 36px;
         display: flex;

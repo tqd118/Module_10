@@ -1,4 +1,4 @@
-import { Component, type ReactNode } from "react";
+import { Component, type ChangeEventHandler, type ReactNode } from "react";
 import s from "./InputField.module.scss";
 
 interface InputFieldProps {
@@ -6,10 +6,11 @@ interface InputFieldProps {
     label: string;
     placeholder: string;
     value: string;
-    onChange: (v: string) => void;
+    onChange: ChangeEventHandler<HTMLInputElement, HTMLInputElement>;
     error?: string;
     success?: boolean;
     hint?: string;
+    name?: string;
     disabled?: boolean;
 }
 
@@ -24,7 +25,8 @@ export default class InputField extends Component<InputFieldProps> {
             error,
             success,
             hint,
-            disabled
+            disabled,
+            name
         } = this.props;
 
         let inputClassName = s.input;
@@ -42,16 +44,17 @@ export default class InputField extends Component<InputFieldProps> {
         return (
             <div className={`${s.field} ${disabled ? s.disabled : ""}`}>
                 <label htmlFor={label}>
-                    <i className={type === "email" ? "icon-mail" : "icon-eye"} /> {label}
+                    <i className={type === "email" ? "icon-mail" : "icon-eye"} /> {label} 
                     <i className={iconClassName} />
                 </label>
 
                 <input
                     id={label}
+                    name={name}
                     type={type}
                     placeholder={placeholder}
                     value={value}
-                    onChange={e => onChange(e.target.value)}
+                    onChange={onChange}
                     disabled={disabled}
                     className={inputClassName}
                 />

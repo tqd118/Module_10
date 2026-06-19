@@ -3,46 +3,46 @@ import s from "./Login.module.scss";
 import Button from "@/components/ui/Button";
 import InputField from "@/components/ui/InputField";
 import { useNavigate, Link } from "react-router-dom";
-import { validateEmail, validatePassword } from "@/utils/validation";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/context/ToastsContext";
+import { useFormik } from 'formik';
+import { object, string }from 'yup';
+
+const validationSchema = object().shape({
+	email: string()
+		.matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/,"Email is not valid")
+		.required("Email is required"),
+	password: string()
+		.min(6, "Password too short")
+		.required("Password is required")
+});
 
 export default function Login() {
 	const { login } = useAuth()
 	const { showToast } = useToast()
-
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-
-	const [emailError, setEmailError] = useState("");
-	const [passwordError, setPasswordError] = useState("");
-
 	const [loading, setLoading] = useState(false)
 
 	const navigate = useNavigate();
 
-	const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		const emailErr = validateEmail(email);
-		const passErr = validatePassword(password);
-
-		setEmailError(emailErr);
-		setPasswordError(passErr);
-
-		if (emailErr || passErr) return;
-
-		setLoading(true);
-
-		try {
-			await login(email, password);
-			navigate("/");
-			showToast("Succesfuly sign in", "success");
-		} catch(e) {
-			setPasswordError(e instanceof Error ? e.message : "Incorrect email or password");
-		} finally {
-			setLoading(false);
+	const formik = useFormik({
+		initialValues: {
+			email: "",
+			password: ""
+		},
+		validationSchema,
+		onSubmit: async values => {
+			setLoading(true);
+			try {
+				await login(values.email, values.password);
+				navigate("/");
+				showToast("Succesfuly sign in", "success");
+			} catch(e) {
+				formik.errors.password = e instanceof Error ? e.message : "Incorrect email or password"
+			} finally {
+				setLoading(false);
+			}
 		}
-	};
+	});
 
 	return (
 		<div className={s.page}>
@@ -53,26 +53,34 @@ export default function Login() {
 				</p>
 			</div>
 
-			<form className={s.form} onSubmit={e => handleSubmit(e)}>
+			<form className={s.form} onSubmit={formik.handleSubmit}>
 				<InputField
 					type="email"
+					name="email"
 					label="Email"
+
 					placeholder="Enter email"
-					value={email}
-					onChange={setEmail}
-					error={emailError}
-					success={!emailError && email.length > 0}/>
+
+					value={formik.values.email}
+					onChange={formik.handleChange}
+
+					error={formik.touched.email ? formik.errors.email : ""}
+					success={formik.touched.email && !formik.errors.email}/>
 
 				<InputField
 					type="password"
+					name="password"
 					label="Password"
-					placeholder="Enter password..."
-					value={password}
-					onChange={setPassword}
-					error={passwordError}
-					success={!passwordError && password.length > 0}/>
 
-				<Button disabled={loading}>
+					placeholder="Enter password..."
+
+					value={formik.values.password}
+					onChange={formik.handleChange}
+
+					error={formik.touched.password ? formik.errors.password : ""}
+					success={formik.touched.password && !formik.errors.password}/>
+
+				<Button disabled={loading} type="submit">
 					Sign In
 				</Button>
 			</form>
