@@ -4,6 +4,8 @@ const basePath = "/Module_10";
 
 const nextConfig: NextConfig = {
     basePath,
+    assetPrefix: basePath,
+    output: "export",
     reactCompiler: true,
     async headers() {
         return [

@@ -27,7 +27,10 @@ export default function Suggestions() {
                 {suggestedUsers.map(user => (
                     <div className={s.user} key={user.id}>
                         <Image 
-                            src={getAssetUrl(user.photo) || getAssetUrl("/assets/blank-user.png")} 
+                            src={getAssetUrl((
+                                user as { photo?: string }).photo) || 
+                                getAssetUrl("/assets/blank-user.png"
+                                )} 
                             alt="avatar" 
                             className={s.icon}
                             height={48}
