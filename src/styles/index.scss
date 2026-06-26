@@ -149,3 +149,41 @@ body {
     from { background-position: 200% 0; }
     to   { background-position: -200% 0; }
 }
+
+.app-fallback-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.app-fallback-page--error {
+    min-height: 100svh;
+    width: 100%;
+    gap: 90px;
+}
+
+.app-fallback-page--404 {
+    min-height: 100svh;
+    gap: 47px;
+}
+
+.app-fallback-page__icon {
+    color: var(--color-text-primary);
+}
+
+.app-fallback-page--error .app-fallback-page__icon {
+    font-size: 95px;
+}
+
+.app-fallback-page--404 .app-fallback-page__icon {
+    font-size: 180px;
+}
+
+.app-fallback-page__title {
+    margin: 0;
+    font-size: 60px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-align: center;
+}

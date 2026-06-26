@@ -1,3 +1,5 @@
+"use client"
+
 import { useAppSelector } from "@/store/hooks";
 import Button from "../Button";
 import s from "./CommentForm.module.scss";
@@ -21,7 +23,7 @@ export default function CommentForm({
     const {
         register,
         handleSubmit,
-        resetField,
+        resetField
     } = useForm<Inputs>({
         defaultValues: {
             content: ""

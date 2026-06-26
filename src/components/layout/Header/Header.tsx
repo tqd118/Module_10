@@ -1,32 +1,39 @@
+"use client";
+
 import s from "./Header.module.scss";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { getAssetUrl } from "@/utils/getAssetUrl";
 import { useAppSelector } from "@/store/hooks";
 import { useTranslation } from "react-i18next";
+import Image from "next/image";
 
 export default function Header() {
     const { t } = useTranslation();
     const user = useAppSelector((state) => state.auth.user);
-
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
         <header className={s.header}>
-            <Link to="/" className={s.logo}>
+            <Link href="/" className={s.logo}>
                 <i className="icon-sidekick-logo" />
                 sidekick
             </Link>
 
             {user ? (
-                <Link className={s.user} to={`/profile/info/`}>
-                    <img src={getAssetUrl(user.profileImage)} alt="avatar" />
+                <Link className={s.user} href="/profile/info">
+                    <Image 
+                        src={getAssetUrl(user.profileImage)} 
+                        alt="avatar" 
+                        width={24}
+                        height={24}
+                        className={s.image}/>
                     {user.firstName + " " + user.secondName}
                 </Link>
             ) : (
                 <div className={s.links}>
-                    <Link to="/register">{t("header.signUp")}</Link>
-                    <Link to="/login">{t("header.signIn")}</Link>
+                    <Link href="/register">{t("header.signUp")}</Link>
+                    <Link href="/login">{t("header.signIn")}</Link>
                 </div>
             )}
 
@@ -37,25 +44,20 @@ export default function Header() {
             </button>
 
             {menuOpen && (
-                <div
-                    className={s.menuOverlay}
-                    onClick={() => setMenuOpen(false)}
-                >
-                    <div
-                        className={s.menu}
-                        onClick={(e) => e.stopPropagation()}
-                    >
+                <div className={s.menuOverlay} onClick={() => setMenuOpen(false)}>
+                    <div className={s.menu} onClick={(e) => e.stopPropagation()}>
                         <div className={`${s.header} ${s.menuHeader}`}>
-                            <Link to="/" className={s.logo}>
+                            <Link href="/" className={s.logo}>
                                 <i className="icon-sidekick-logo" />
                                 sidekick
                             </Link>
-
                             {user && (
-                                <Link className={s.user} to={`/profile/info/`}>
-                                    <img
-                                        src={getAssetUrl(user.profileImage)}
+                                <Link className={s.user} href="/profile/info">
+                                    <Image 
+                                        src={getAssetUrl(user.profileImage)} 
                                         alt="avatar"
+                                        width={24}
+                                        height={24} 
                                     />
                                 </Link>
                             )}
@@ -63,25 +65,19 @@ export default function Header() {
 
                         {user ? (
                             <>
-                                <Link
-                                    to={`/profile/info/`}
-                                    className={s.menuButton}
-                                >
-                                    Profile info
+                                <Link href="/profile/info" className={s.menuButton}>
+                                    {t("profile.profileInfo")}
                                 </Link>
-                                <Link
-                                    to={`/profile/stats/`}
-                                    className={s.menuButton}
-                                >
-                                    Statistics
+                                <Link href="/profile/stats" className={s.menuButton}>
+                                    {t("profile.stats")}
                                 </Link>
                             </>
                         ) : (
                             <>
-                                <Link to="/register" className={s.menuButton}>
+                                <Link href="/register" className={s.menuButton}>
                                     {t("header.signUp")}
                                 </Link>
-                                <Link to="/login" className={s.menuButton}>
+                                <Link href="/login" className={s.menuButton}>
                                     {t("header.signIn")}
                                 </Link>
                             </>

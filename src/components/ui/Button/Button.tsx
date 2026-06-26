@@ -1,3 +1,5 @@
+"use client"
+
 import { Component, type ReactNode, type ButtonHTMLAttributes } from "react";
 
 const buttonStyle = {

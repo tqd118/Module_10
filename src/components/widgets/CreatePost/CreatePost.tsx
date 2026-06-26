@@ -1,3 +1,5 @@
+"use client"
+
 import s from "./CreatePost.module.scss"
 import Button from "@/components/ui/Button";
 import { useState, lazy, Suspense } from "react";
@@ -6,6 +8,7 @@ import { getAssetUrl } from '@/utils/getAssetUrl';
 import { useAppSelector } from "@/store/hooks";
 import PostFormSkeleton from "@/components/features/PostForm/PostFormSkeleton";
 import { useTranslation } from "react-i18next";
+import Image from "next/image";
 
 const PostForm = lazy(() => import("@/components/features/PostForm"));
 
@@ -17,7 +20,12 @@ export default function CreatePost() {
 
     return (
         <div className={s.createPost}>
-            <img src={getAssetUrl(user?.profileImage)} alt="avatar" className={s.userIcon}/>
+            <Image 
+                src={getAssetUrl(user?.profileImage)} 
+                alt="avatar" 
+                className={s.userIcon}
+                width={64}
+                height={64}/>
             <span className={s.title}>{t("feed.postCreationGreeting")}</span>
             <Button
                 onClick={() => setIsModalOpen(true)}

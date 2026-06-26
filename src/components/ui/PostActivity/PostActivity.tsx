@@ -1,3 +1,5 @@
+"use client"
+
 import type { Post, User } from "@/types/social";
 import s from "./PostActivity.module.scss"
 import { useState, useRef, useEffect } from "react";

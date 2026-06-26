@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,Symbol.toStringTag,{value:"Module"});const t=require("./index-BxVYkMv3.js");exports.startMockingNotes=t.startMockingNotes;exports.startMockingSocial=t.startMockingSocial;

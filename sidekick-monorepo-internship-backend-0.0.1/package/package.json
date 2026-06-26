@@ -1,0 +1,14 @@
+{
+  "name": "@sidekick-monorepo/internship-backend",
+  "version": "0.0.1",
+  "main": "./index.js",
+  "module": "./index.mjs",
+  "typings": "./index.d.ts",
+  "private": true,
+  "dependencies": {
+    "@graphql-tools/schema": "^10.0.25",
+    "graphql": "^16.11.0",
+    "msw": "^2.11.3",
+    "jose": "^6.1.0"
+  }
+}

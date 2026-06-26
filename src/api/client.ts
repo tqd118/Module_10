@@ -1,13 +1,16 @@
 import axios from "axios";
+import { BASE_PATH } from "@/config/basePath";
 
 const client = axios.create({
-    baseURL: "/api",
+    baseURL: `/api`,
 });
 
 client.interceptors.request.use((config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+    if (typeof localStorage !== "undefined") {
+        const token = localStorage.getItem("token");
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
     }
     return config;
 });

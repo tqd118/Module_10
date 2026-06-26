@@ -1,8 +1,11 @@
+"use client";
+
 import Button from "@/components/ui/Button";
 import s from "./PostForm.module.scss";
-import { useState } from "react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import { usePostsContext } from "@/context/PostsContext";
-import { useForm, type SubmitHandler } from "react-hook-form"
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 type ImageType = {
@@ -21,6 +24,7 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
     const { createPost } = usePostsContext();
 
     const [isImageDragging, setIsImageDragging] = useState(false);
+    const [previewRatio, setPreviewRatio] = useState(1);
 
     const {
         register,
@@ -28,17 +32,27 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
         setValue,
         watch,
         formState: { errors },
-    } = useForm<Inputs>()
+    } = useForm<Inputs>();
+
+    const image = watch("image");
 
     const handleFileSelect = (file?: File) => {
         if (!file) {
             return;
         }
 
-        setValue("image", {
-            link: URL.createObjectURL(file),
-            name: file.name
-        }, { shouldValidate: true });
+        const link = URL.createObjectURL(file);
+
+        setPreviewRatio(1);
+
+        setValue(
+            "image",
+            {
+                link,
+                name: file.name,
+            },
+            { shouldValidate: true, shouldDirty: true }
+        );
     };
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -51,41 +65,54 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
         onClose();
     };
 
-    const image = watch("image");
+    useEffect(() => {
+        if (!image?.link) {
+            setPreviewRatio(1);
+            return;
+        }
+
+        return () => {
+            if (image.link.startsWith("blob:")) {
+                URL.revokeObjectURL(image.link);
+            }
+        };
+    }, [image?.link]);
 
     return (
         <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
             <div className={s.heading}>
                 {t("forms.createPost")}
-                <button onClick={onClose} type="button">✕</button>
+                <button onClick={onClose} type="button">
+                    ✕
+                </button>
             </div>
 
             <label htmlFor="title">
-                <i className="icon-mail" />{t("forms.titleLabel")}
+                <i className="icon-mail" />
+                {t("forms.titleLabel")}
             </label>
             <input
                 type="text"
                 id="title"
                 className={`${s.textInput} ${s.titleInput}`}
                 placeholder={t("forms.title")}
-                
                 {...register("title", {
-                    required: true
+                    required: true,
                 })}
             />
             {errors.title && <span>{t("forms.required")}</span>}
 
             <label htmlFor="description">
-                <i className="icon-pen" />{t("forms.descriptionLabel")}
+                <i className="icon-pen" />
+                {t("forms.descriptionLabel")}
             </label>
             <input
                 type="text"
                 id="description"
                 className={`${s.textInput} ${s.descriptionInput}`}
                 placeholder={t("forms.description")}
-                
                 {...register("description", {
-                    required: true
+                    required: true,
                 })}
             />
             {errors.description && <span>{t("forms.required")}</span>}
@@ -110,19 +137,37 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
                     type="file"
                     accept="image/*"
                     hidden
-                    
                     {...register("image", {
-                        onChange: (e) => handleFileSelect(e.target.files?.[0])
+                        onChange: (e) => handleFileSelect(e.target.files?.[0]),
                     })}
                 />
 
                 {image?.link ? (
                     <>
-                        <img
-                            src={image.link}
-                            alt="your image"
-                            className={s.previewImage}
-                        />
+                        <div
+                            className={s.previewWrapper}
+                            style={{ aspectRatio: previewRatio }}
+                        >
+                            <Image
+                                src={image.link}
+                                alt={image.name}
+                                fill
+                                unoptimized
+                                sizes="(max-width: 480px) 100vw, 320px"
+                                className={s.previewImage}
+                                onLoad={(event) => {
+                                    const { naturalWidth, naturalHeight } =
+                                        event.currentTarget;
+
+                                    if (naturalWidth > 0 && naturalHeight > 0) {
+                                        setPreviewRatio(
+                                            naturalWidth / naturalHeight
+                                        );
+                                    }
+                                }}
+                            />
+                        </div>
+
                         <h4 className={s.previewName}>{image.name}</h4>
                     </>
                 ) : (
@@ -143,7 +188,9 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
             </label>
 
             <div className={s.footer}>
-                <Button className={s.button} type="submit">{t("forms.create")}</Button>
+                <Button className={s.button} type="submit">
+                    {t("forms.create")}
+                </Button>
             </div>
         </form>
     );

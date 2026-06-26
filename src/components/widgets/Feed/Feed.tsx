@@ -1,3 +1,5 @@
+"use client"
+
 import PostCard from "@/components/features/PostCard";
 import s from "./Feed.module.scss"
 import { useEffect } from "react";

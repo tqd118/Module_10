@@ -1,3 +1,5 @@
+"use client"
+
 import { Component, type ChangeEventHandler, type FocusEventHandler, type ReactNode} from "react";
 
 interface InputFieldProps {
