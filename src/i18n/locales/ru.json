@@ -1,0 +1,122 @@
+{
+	"header": {
+		"signIn": "Войти",
+		"signUp": "Регистрация"
+	},
+	"timeAgo": {
+		"minutes_one": "{{count}} минуту назад",
+		"minutes_few": "{{count}} минуты назад",
+		"minutes_many": "{{count}} минут назад",
+		"minutes_other": "{{count}} минут назад",
+		"hours_one": "{{count}} час назад",
+		"hours_few": "{{count}} часа назад",
+		"hours_many": "{{count}} часов назад",
+		"hours_other": "{{count}} часов назад",
+		"days_one": "{{count}} день назад",
+		"days_few": "{{count}} дня назад",
+		"days_many": "{{count}} дней назад",
+		"days_other": "{{count}} дней назад"
+	},
+	"members": {
+		"member_one": "{{count}}{{unit}} участник",
+		"member_few": "{{count}}{{unit}} участника",
+		"member_many": "{{count}}{{unit}} участников",
+		"member_other": "{{count}}{{unit}} участников"
+	},
+	"feed": {
+		"likes_one": "{{count}} лайк",
+		"likes_few": "{{count}} лайка",
+		"likes_many": "{{count}} лайков",
+		"likes_other": "{{count}} лайков",
+
+		"comments_one": "{{count}} комментарий",
+		"comments_few": "{{count}} комментария",
+		"comments_many": "{{count}} комментариев",
+		"loginToComment": "Войдите чтобы видеть комментарии",
+
+		"postCreationGreeting": "Есть чем поделиться?",
+		"postCreationButton": "Рассказать всем",
+
+		"peopleSuggestions": "Возможные знакомые",
+		"groupSuggestions": "Рекомендованные сообщества"
+	},
+	"forms": {
+		"createPost": "Создать новый пост",
+		"addComment": "Прокомментировать",
+
+		"description": "Напишите описание здесь...",
+		"descriptionLabel": "Описание",
+		"title": "Напишите название поста",
+		"titleLabel": "Название поста",
+		"fileIsnstruction": "Выберите файл или перенесите сюда",
+		"fileConstrains": "JPG, PNG или SVG, размер файла не должен превышать 10мб",
+
+		"required": "Это поле обязательное",
+		"requiredField": "Поле {{field}} обязательное",
+
+		"create": "Создать"
+	},
+	"profile": {
+		"editProfile": "Редактировать профиль",
+		"preferences": "Предпочтения",
+		"saveChanges": "Сохранить изменения",
+
+		"updateSuccess": "Информация профиля успешно обновленна",
+
+		"changePhoto": "Изменить фото",
+		"username": "Имя пользователя",
+		"fullName": "Полное имя",
+		"firstName": "Имя",
+		"secondName": "Фамилия",
+		"description": "Описание",
+
+		"charsLimit": "Максимум 200 символов",
+		"reachedCharsLimit": "Вы достигли лимита в 200 символов",
+
+		"usernameNotValid": "Имя пользователя должно состоять только из букв, цифр и _",
+
+		"actions": "Действия",
+		"logout": "Выйти",
+		"darkTheme": "Тёмная тема",
+
+		"profileInfo": "Информация",
+		"stats": "Статистика",
+
+		"languageSwitch": "Переключить язык"
+	},
+	"auth": {
+		"signIn": "Войти",
+		"signUp": "Зарегистрироваться",
+
+		"signInHeading": "Вход в аккаунт",
+		"signInSubHeading": "Введите email и пароль,\nчтобы войти в приложение",
+
+		"signUpHeading": "Создание аккаунта",
+		"signUpSubHeading": "Введите email и пароль,\nчтобы зарегистрироваться в приложении",
+
+		"email": "Email",
+		"password": "Пароль",
+
+		"enterEmail": "Введите email",
+		"enterPassword": "Введите пароль",
+
+		"emailNotValid": "Некорректный email",
+		"passwordTooShort": "Пароль слишком короткий",
+
+		"signInSuccess": "Вход выполнен успешно",
+		"signUpSuccess": "Регистрация выполнена успешно",
+
+		"invalidCredentials": "Неверный email или пароль",
+		"registrationFailed": "Не удалось зарегистрироваться",
+
+		"strongPassword": "Надежный пароль",
+
+		"noAccount": "Еще нет аккаунта?",
+		"hasAccount": "Уже есть аккаунт?",
+
+		"termsAgreement": "Нажимая кнопку, вы соглашаетесь с",
+		"termsOfService": "Условиями использования",
+		"and": "и",
+		"privacyPolicy": "Политикой конфиденциальности"
+	}
+}

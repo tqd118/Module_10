@@ -7,7 +7,7 @@
         background-color: var(--color-surface);
 
         height: 40px;
-        width: 215px;
+        width: fit-content;
         padding: 4px;
 
         display: flex;
@@ -69,11 +69,6 @@
                     justify-content: center;
                     justify-content: start;
 
-                    
-                    .userNameChange {
-                        cursor: pointer;
-                    }
-
                     input {
                         background-color: var(--color-bg);
                         color: var(--color-text-primary);
@@ -126,18 +121,18 @@
                     resize: none;
                 }
 
+                .error {
+                    color: var(--color-error)
+                }
+
                 .descriptionWarn {
                     font-size: 16px;
                     color: var(--color-text-secondary);
-
-                    .error {
-                        color: var(--color-error)
-                    }
                 }
             }
 
             .saveInfoButton {
-                width: 244px;
+                width: 244px !important;
             }
         }
 
@@ -150,13 +145,13 @@
             gap: 32px;
 
             .logoutButton {
-                width: 144px;
+                width: 144px !important;
             }
         }
     }    
 }
 
-.themeSwitch {
+.preferencesSwitch {
     display: flex;
     align-items: center;
     cursor: pointer;

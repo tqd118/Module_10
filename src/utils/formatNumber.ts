@@ -1,7 +1,17 @@
-export function formatNumber(n: number): string {
-    if (n < 1000) return String(n);
+interface NumberResult {
+    count: number;
+    unit: "" | "k" | "m"
+}
 
-    const units = [
+export function formatNumber(n: number): NumberResult {
+    if (n < 1000) {
+        return {
+            count: n,
+            unit: ""
+        }
+    }
+
+    const units: {value: number, suffix: "k" | "m"}[] = [
         { value: 1000000, suffix: "m" },
         { value: 1000, suffix: "k" },
     ];
@@ -9,9 +19,15 @@ export function formatNumber(n: number): string {
     for (const u of units) {
         if (n >= u.value) {
             const num = n / u.value;
-            return num.toFixed(1) + u.suffix;
+            return {
+                count: Math.floor(num),
+                unit: u.suffix
+            }
         }
     }
 
-    return String(n);
+    return {
+        count: n,
+        unit: ""
+    }
 }

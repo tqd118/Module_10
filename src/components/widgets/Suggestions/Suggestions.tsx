@@ -4,9 +4,11 @@ import { getAssetUrl } from '@/utils/getAssetUrl';
 import { useProfile } from "@/hooks/useProfile";
 import { useGroups } from "@/hooks/useGroups";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Suggestions() {
-    const { loading, suggestedUsers, fetchSuggestedUsers } = useProfile();
+    const { t } = useTranslation()
+    const { suggestedUsers, fetchSuggestedUsers } = useProfile();
     const { groups, fetchGroups } = useGroups()
 
     useEffect(() => {
@@ -14,10 +16,11 @@ export default function Suggestions() {
         fetchGroups();
     }, [])
 
+
     return (
         <div className={s.suggestions}>
             <div className={s.field}>
-                <h3>Suggested people</h3>
+                <h3>{t("feed.peopleSuggestions")}</h3>
                 {suggestedUsers.map(user => (
                     <div className={s.user} key={user.id}>
                         <img 
@@ -32,14 +35,18 @@ export default function Suggestions() {
             </div>
 
             <div className={s.field}>
-                <h3>Communities you might like</h3>
-                {groups.map(group => (
-                    <div className={s.group} key={group.id}>
-                        <img src={getAssetUrl(group.photo)} alt="group logo" className={s.icon}/>
-                        <div className={s.name}>{group.title}</div>
-                        <div className={s.members}>{ formatNumber(group.membersCount) } members</div>
-                    </div>
-                ))}
+                <h3>{t("feed.groupSuggestions")}</h3>
+                {groups.map(group => {
+                    const {count, unit} = formatNumber(group.membersCount);
+
+                    return (
+                        <div className={s.group} key={group.id}>
+                            <img src={getAssetUrl(group.photo)} alt="group logo" className={s.icon}/>
+                            <div className={s.name}>{group.title}</div>
+                            <div className={s.members}>{t("members.member", {count, unit})}</div>
+                        </div>
+                    )
+                })}
             </div>
         </div>
     );

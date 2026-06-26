@@ -19,5 +19,12 @@ export default defineConfig({
       environment: "jsdom",
       globals: true,
       setupFiles: "./src/tests/setup.ts",
+      coverage: {
+        enabled: true,
+        provider: "v8",
+        reporter: ["text", "html"],
+        reportsDirectory: './coverage',
+        exclude: ['**/src/tests/e2e']
+      }
   },
 })
