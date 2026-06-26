@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[97367,["/Module_10/_next/static/chunks/30re35y05sjbd.js","/Module_10/_next/static/chunks/07w-7420_7ooe.js","/Module_10/_next/static/chunks/0iszqewr4yugu.js","/Module_10/_next/static/chunks/44qb91rprlsl1.js","/Module_10/_next/static/chunks/14mrh2-p_w84d.js"],"OutletBoundary"]
+3:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","div",null,{"className":"app-fallback-page app-fallback-page--404","children":[["$","i",null,{"className":"icon-error-404 app-fallback-page__icon"}],["$","h2",null,{"className":"app-fallback-page__title","children":"Page not found"}]]}],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"emjTcS4-c6jIxg-xBEaYc"}
+4:null
