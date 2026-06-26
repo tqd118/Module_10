@@ -3,6 +3,7 @@ import s from "./PostForm.module.scss";
 import { useState } from "react";
 import { usePostsContext } from "@/context/PostsContext";
 import { useForm, type SubmitHandler } from "react-hook-form"
+import { useTranslation } from "react-i18next";
 
 type ImageType = {
     link: string;
@@ -16,6 +17,7 @@ interface Inputs {
 }
 
 export default function PostForm({ onClose }: { onClose: () => void }) {
+    const { t } = useTranslation();
     const { createPost } = usePostsContext();
 
     const [isImageDragging, setIsImageDragging] = useState(false);
@@ -54,39 +56,39 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
     return (
         <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
             <div className={s.heading}>
-                Create a new post
+                {t("forms.createPost")}
                 <button onClick={onClose} type="button">✕</button>
             </div>
 
             <label htmlFor="title">
-                <i className="icon-mail" /> Post Title
+                <i className="icon-mail" />{t("forms.titleLabel")}
             </label>
             <input
                 type="text"
                 id="title"
                 className={`${s.textInput} ${s.titleInput}`}
-                placeholder="Enter post title"
+                placeholder={t("forms.title")}
                 
                 {...register("title", {
                     required: true
                 })}
             />
-            {errors.title && <span>This field is required</span>}
+            {errors.title && <span>{t("forms.required")}</span>}
 
             <label htmlFor="description">
-                <i className="icon-pen" /> Description
+                <i className="icon-pen" />{t("forms.descriptionLabel")}
             </label>
             <input
                 type="text"
                 id="description"
                 className={`${s.textInput} ${s.descriptionInput}`}
-                placeholder="Write description here..."
+                placeholder={t("forms.description")}
                 
                 {...register("description", {
                     required: true
                 })}
             />
-            {errors.description && <span>This field is required</span>}
+            {errors.description && <span>{t("forms.required")}</span>}
 
             <label
                 className={`${s.imgField} ${isImageDragging ? s.dragging : ""}`}
@@ -129,11 +131,11 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
 
                         <div>
                             <p className={s.imgFieldTitle}>
-                                Select a file or drag and drop here
+                                {t("forms.fileIsnstruction")}
                             </p>
 
                             <p className={s.imgFieldSubtitle}>
-                                JPG, PNG or PDF, file size no more than 10MB
+                                {t("forms.fileConstrains")}
                             </p>
                         </div>
                     </>
@@ -141,7 +143,7 @@ export default function PostForm({ onClose }: { onClose: () => void }) {
             </label>
 
             <div className={s.footer}>
-                <Button className={s.button} type="submit">Create</Button>
+                <Button className={s.button} type="submit">{t("forms.create")}</Button>
             </div>
         </form>
     );

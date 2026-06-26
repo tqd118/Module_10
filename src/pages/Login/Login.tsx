@@ -3,91 +3,134 @@ import s from "./Login.module.scss";
 import Button from "@/components/ui/Button";
 import InputField from "@/components/ui/InputField";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/context/ToastsContext";
-import { useFormik } from 'formik';
-import { object, string }from 'yup';
-
-const validationSchema = object().shape({
-	email: string()
-		.matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/,"Email is not valid")
-		.required("Email is required"),
-	password: string()
-		.min(6, "Password too short")
-		.required("Password is required")
-});
+import { useFormik } from "formik";
+import { object, string } from "yup";
+import { useTranslation } from "react-i18next";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Login() {
-	const { login } = useAuth()
-	const { showToast } = useToast()
-	const [loading, setLoading] = useState(false)
+    const { t } = useTranslation();
+    const { showToast } = useToast();
+    const { login } = useAuth();
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    
 
-	const navigate = useNavigate();
+    const validationSchema = object({
+        email: string()
+            .matches(
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                t("auth.emailNotValid"),
+            )
+            .required(
+                t("forms.requiredField", {
+                    field: t("auth.email"),
+                }),
+            ),
 
-	const formik = useFormik({
-		initialValues: {
-			email: "",
-			password: ""
-		},
-		validationSchema,
-		onSubmit: async values => {
-			setLoading(true);
-			try {
-				await login(values.email, values.password);
-				navigate("/");
-				showToast("Succesfuly sign in", "success");
-			} catch(e) {
-				formik.errors.password = e instanceof Error ? e.message : "Incorrect email or password"
-			} finally {
-				setLoading(false);
-			}
-		}
-	});
+        password: string()
+            .min(6, t("auth.passwordTooShort"))
+            .required(
+                t("forms.requiredField", {
+                    field: t("auth.password"),
+                }),
+            ),
+    });
 
-	return (
-		<div className={s.page}>
-			<div>
-				<h2 className={s.heading}>Sign in into an account</h2>
-				<p className={s.subHeading}>
-				Enter your email and password<br/>to sign in into this app
-				</p>
-			</div>
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            password: "",
+        },
+        validationSchema,
 
-			<form className={s.form} onSubmit={formik.handleSubmit}>
-				<InputField
-					type="email"
-					name="email"
-					label="Email"
+        onSubmit: async (values, { setFieldError }) => {
+            setLoading(true);
 
-					placeholder="Enter email"
+            try {
+                await login(values.email, values.password );
+                showToast(t("auth.signInSuccess"), "success");
+                navigate("/");
+            } catch (e) {
+                setFieldError(
+                    "password",
+                    e instanceof Error ? e.message : t("auth.invalidCredentials"),
+                );
+            } finally {
+                setLoading(false);
+            }
+        },
+    });
 
-					value={formik.values.email}
-					onChange={formik.handleChange}
+    return (
+        <div className={s.page}>
+            <div>
+                <h2 className={s.heading}>
+                    {t("auth.signInHeading")}
+                </h2>
 
-					error={formik.touched.email ? formik.errors.email : ""}
-					success={formik.touched.email && !formik.errors.email}/>
+                <p className={s.subHeading}>
+                    {t("auth.signInSubHeading")}
+                </p>
+            </div>
 
-				<InputField
-					type="password"
-					name="password"
-					label="Password"
+            <form
+                className={s.form}
+                onSubmit={formik.handleSubmit}
+            >
+                <InputField
+                    type="email"
+                    name="email"
+                    label={t("auth.email")}
+                    placeholder={t("auth.enterEmail")}
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={
+                        formik.touched.email
+                            ? formik.errors.email
+                            : ""
+                    }
+                    success={
+                        formik.touched.email &&
+                        !formik.errors.email
+                    }
+                />
 
-					placeholder="Enter password..."
+                <InputField
+                    type="password"
+                    name="password"
+                    label={t("auth.password")}
+                    placeholder={t("auth.enterPassword")}
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={
+                        formik.touched.password
+                            ? formik.errors.password
+                            : ""
+                    }
+                    success={
+                        formik.touched.password &&
+                        !formik.errors.password
+                    }
+                />
 
-					value={formik.values.password}
-					onChange={formik.handleChange}
+                <Button
+                    disabled={loading}
+                    type="submit"
+                >
+                    {t("auth.signIn")}
+                </Button>
+            </form>
 
-					error={formik.touched.password ? formik.errors.password : ""}
-					success={formik.touched.password && !formik.errors.password}/>
-
-				<Button disabled={loading} type="submit">
-					Sign In
-				</Button>
-			</form>
-
-			<span className={s.signUp}>
-				Forgot to create an account? <Link to="/register">Sign up</Link>
-			</span>
-		</div>
-	);
+            <span className={s.signUp}>
+                {t("auth.noAccount")}{" "}
+                <Link to="/register">
+                    {t("auth.signUp")}
+                </Link>
+            </span>
+        </div>
+    );
 }

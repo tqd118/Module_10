@@ -5,10 +5,11 @@ import HomePage from "@/pages/Home";
 import Error404 from "@/pages/Error404";
 import Error from "@/pages/Error";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
+import Profile from "@/pages/Profile";
+import Spinner from "@/components/ui/Spinner";
 
 const LoginPage = lazy(() => import("@/pages/Login"));
 const RegisterPage = lazy(() => import("@/pages/Register"));
-const ProfilePage = lazy(() => import("@/pages/Profile"));
 
 export const router = createHashRouter([
     {
@@ -20,7 +21,7 @@ export const router = createHashRouter([
 			{
 				path: "login", 
 				element: (
-					<Suspense fallback={<div>Loading</div>}>
+					<Suspense fallback={<Spinner style={{position: "absolute"}} />}>
 						<LoginPage />
 					</Suspense>
 				) 
@@ -28,7 +29,7 @@ export const router = createHashRouter([
 			{ 
 				path: "register", 
 				element: (
-					<Suspense fallback={<div>Loading</div>}>
+					<Suspense fallback={<Spinner style={{position: "absolute"}} />}>
 						<RegisterPage /> 
 					</Suspense>
 				)
@@ -39,9 +40,7 @@ export const router = createHashRouter([
 					{ 
 						path: "profile/:page", 
 						element: (
-							<Suspense fallback={<div>Loading</div>}>
-								<ProfilePage />
-							</Suspense>
+							<Profile />
 						)
 					}
 				],

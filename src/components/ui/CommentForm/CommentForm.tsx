@@ -1,7 +1,8 @@
+import { useAppSelector } from "@/store/hooks";
 import Button from "../Button";
 import s from "./CommentForm.module.scss";
-import { useUser } from "@/context/UserContext";
 import { useForm,type SubmitHandler, } from "react-hook-form"
+import { useTranslation } from "react-i18next";
 
 interface CommentFormProps {
     postId: number;
@@ -15,11 +16,12 @@ export default function CommentForm({
     postId,
     onCreateComment,
 }: CommentFormProps) {
-    const { userId } = useUser();
+    const { t } = useTranslation();
+    const userId = useAppSelector(state => state.auth.userId);
     const {
         register,
         handleSubmit,
-        reset,
+        resetField,
     } = useForm<Inputs>({
         defaultValues: {
             content: ""
@@ -32,26 +34,26 @@ export default function CommentForm({
         }
 
         onCreateComment(postId, data.content);
-        reset();
+        resetField("content");
     }
 
     return (
         <form className={s.form} onSubmit={handleSubmit(onSubmit)}>
             <label htmlFor="comment" className={s.label}>
                 <span className={`${s.addCommentIcon} icon-pen`}>
-                    Add a comment
+                    {t("forms.addComment")}
                 </span>
                 <textarea
                     id="comment"
                     className={s.textarea}
-                    placeholder="Write description here..."
+                    placeholder={t("forms.description")}
                     {...register("content",
                         { required: true }
                     )}
                 />
             </label>
 
-            <Button className={s.submit} type="submit">Add a comment</Button>
+            <Button className={s.submit} type="submit">{t("forms.addComment")}</Button>
         </form>
     );
 }

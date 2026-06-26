@@ -3,6 +3,7 @@ import s from "./PostCard.module.scss";
 import formatTime from "@/utils/formatTime";
 import PostActivity from "@/components/ui/PostActivity";
 import { getAssetUrl } from "@/utils/getAssetUrl";
+import { useTranslation } from "react-i18next";
 
 interface PostCardProps {
     post: Post;
@@ -10,6 +11,9 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post, onLike }: PostCardProps) {
+    const { t } = useTranslation()
+    const { count, unit } = formatTime(post.creationDate);
+
     return (
         <article className={s.post}>
             <div className={s.header}>
@@ -22,7 +26,7 @@ export default function PostCard({ post, onLike }: PostCardProps) {
                     {post.author?.firstName || post.author?.username}
                 </span>
                 <span className={s.publishTime}>
-                    {formatTime(post.creationDate)} ago
+                    {t(`timeAgo.${unit}`, { count })}
                 </span>
             </div>
 
