@@ -13,7 +13,15 @@ function patchServiceWorkerScope() {
         return;
     }
 
-    const originalRegister = navigator.serviceWorker.register.bind(navigator.serviceWorker);
+    const isLocalhost = window.location.hostname === "localhost" ||
+                        window.location.hostname === "127.0.0.1";
+
+    if (!isLocalhost) {
+        return;
+    }
+
+    const originalRegister =
+        navigator.serviceWorker.register.bind(navigator.serviceWorker);
 
     navigator.serviceWorker.register = (scriptURL, options) =>
         originalRegister(scriptURL, { ...options, scope: "/" });

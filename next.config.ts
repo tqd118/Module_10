@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
     assetPrefix: basePath,
     output: "export",
     reactCompiler: true,
+    images: {
+        unoptimized: true,
+    },
     async headers() {
         return [
             {
