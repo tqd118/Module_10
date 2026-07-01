@@ -118,5 +118,19 @@
 		"termsOfService": "Условиями использования",
 		"and": "и",
 		"privacyPolicy": "Политикой конфиденциальности"
+	},
+	"months": ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+	"table": {
+		"month": "Месяц",
+		"counts": "Количество {{columnTitle}}"
+	},
+	"stats": {
+		"likesTitle": "Лайки",
+		"commentsTitle": "Комментарии",
+		"postsTitle": "Посты",
+		"likesColumnTitle": "Лайков",
+		"commentsColumnTitle": "Комментариев",
+
+		"chartView": "Отображение в графиках"
 	}
 }

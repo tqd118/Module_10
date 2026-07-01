@@ -1,5 +1,5 @@
 import { gql } from "@/api/graphql";
-import type { User } from "@/types/social";
+import type { Post, User } from "@/types/social";
 import { useState } from "react";
 
 const USER_FIELDS = `
@@ -16,6 +16,11 @@ const USER_FIELDS = `
 export function useProfile() {
     const [suggestedUsers, setSuggestedUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
+
+    const [likes, setLikes] = useState<{creationDate: string}[]>([]);
+    const [comments, setComments] = useState<{creationDate: string}[]>([]);
+    const [posts, setPosts] = useState<{creationDate: string}[]>([]);
+
 
     const fetchSuggestedUsers = async () => {
         setLoading(true);
@@ -50,10 +55,50 @@ export function useProfile() {
         return me;
     };
 
+
+    const fetchUserLikes = async () => {
+        const { meLikes } = await gql<{ meLikes: {creationDate: string}[] }>(
+            `query {
+                meLikes {
+                    creationDate
+                }
+            }`,
+        );
+        setLikes(meLikes);
+    }
+
+    const fetchUserComments = async () => {
+        const { meComments } = await gql<{ meComments: {creationDate: string}[] }>(
+            `query {
+                meComments {
+                    creationDate
+                }
+            }`,
+        );
+        setComments(meComments);
+    }
+
+    const fetchUserPosts = async () => {
+        const { mePosts } = await gql<{ mePosts: Post[] }>(
+            `query {
+                mePosts {
+                    creationDate
+                }
+            }`,
+        );
+        setPosts(mePosts);
+    }
+
     return {
         suggestedUsers,
         loading,
         fetchSuggestedUsers,
         fetchMe,
+        fetchUserLikes,
+        fetchUserComments,
+        fetchUserPosts,
+        likes,
+        comments,
+        posts
     };
 }

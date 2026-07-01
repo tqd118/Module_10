@@ -106,5 +106,19 @@
 		"termsOfService": "Terms of Service",
 		"and": "and",
 		"privacyPolicy": "Privacy Policy"
-  	}
+  	},
+	"months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+	"table": {
+		"month": "Month",
+		"counts": "{{columnTitle}} counts"
+	},
+	"stats": {
+		"likesTitle": "Likes",
+		"commentsTitle": "Comments",
+		"postsTitle": "Posts",
+		"likesColumnTitle": "Likes",
+		"commentsColumnTitle": "Comments",
+
+		"chartView": "Chart view"
+	}
 }
