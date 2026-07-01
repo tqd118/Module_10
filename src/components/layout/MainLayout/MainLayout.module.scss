@@ -5,4 +5,15 @@
 .content {
 	min-height: calc(100svh - 68px);
 	display: grid;
+
+	padding: 24px;
+	margin-top: 48px;
+}
+
+
+@media (max-width: 768px) {
+    .content {
+        padding: 0;
+        padding-top: 24px;
+    }
 }

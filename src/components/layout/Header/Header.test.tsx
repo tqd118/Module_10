@@ -1,92 +1,93 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
+import userEvent from "@testing-library/user-event";
+import { useUser } from "@/context/UserContext";
 import Header from "@/components/layout/Header";
 
-vi.mock("@/context/UserContext", () => ({ useUser: vi.fn() }));
-vi.mock("@/utils/getAssetUrl", () => ({ getAssetUrl: (path?: string) => path ?? "" }));
+vi.mock("@/context/UserContext", () => ({ 
+    useUser: vi.fn() 
+}));
 
-import { useUser } from "@/context/UserContext";
-import type { User } from "@/types/social";
+vi.mock("@/utils/getAssetUrl", () => ({ 
+    getAssetUrl: (path?: string) => path ?? "" 
+}));
 
-const mockUser: User = {
+const mockUser = {
     id: 1,
-    username: "alice",
-    firstName: "Alice",
-    secondName: "Smith",
+    username: "testName",
+    firstName: "John",
+    secondName: "Doe",
     profileImage: "avatar.png",
 };
 
-function renderHeader() {
-    return render(
-        <MemoryRouter>
-            <Header />
-        </MemoryRouter>
-    );
-}
+const headerComponent = (
+    <MemoryRouter>
+        <Header />
+    </MemoryRouter>
+);
 
 describe("Header", () => {
     beforeEach(() => {
         vi.mocked(useUser).mockReturnValue({
-            userId: null,
-            setUserId: vi.fn(),
-            user: null,
             setUser: vi.fn(),
+            setUserId: vi.fn(),
+            userId: null,
+            user: null
         });
     });
 
-    it("renders logo link", () => {
-        renderHeader();
+    it("renders logo", () => {
+        render(headerComponent);
         expect(screen.getByText("sidekick")).toBeInTheDocument();
     });
 
-    it("shows Sign In and Sign Up links when user is not authenticated", () => {
-        renderHeader();
+    it("shows Sign In and Sign Up links when user is unauthorized", () => {
+        render(headerComponent);
         expect(screen.getByText("Sign Up")).toBeInTheDocument();
         expect(screen.getByText("Sign In")).toBeInTheDocument();
     });
 
     it("hides auth links when user is authenticated", () => {
         vi.mocked(useUser).mockReturnValue({
-            userId: mockUser.id,
-            setUserId: vi.fn(),
-            user: mockUser,
             setUser: vi.fn(),
+            setUserId: vi.fn(),
+            userId: mockUser.id,
+            user: mockUser
         });
 
-        renderHeader();
+        render(headerComponent);
         expect(screen.queryByText("Sign Up")).not.toBeInTheDocument();
         expect(screen.queryByText("Sign In")).not.toBeInTheDocument();
     });
 
     it("shows user full name when authenticated", () => {
         vi.mocked(useUser).mockReturnValue({
-            userId: mockUser.id,
-            setUserId: vi.fn(),
-            user: mockUser,
             setUser: vi.fn(),
+            setUserId: vi.fn(),
+            userId: mockUser.id,
+            user: mockUser,
         });
 
-        renderHeader();
-        expect(screen.getByText("Alice Smith")).toBeInTheDocument();
+        render(headerComponent);
+        expect(screen.getByText("John Doe")).toBeInTheDocument();
     });
 
     it("renders burger menu button", () => {
-        renderHeader();
+        render(headerComponent);
         expect(screen.getByRole("button")).toBeInTheDocument();
     });
 
     it("opens mobile menu when burger button is clicked", async () => {
-        renderHeader();
+        render(headerComponent);
         await userEvent.click(screen.getByRole("button"));
 
         const signUpLinks = screen.getAllByText("Sign Up");
-        expect(signUpLinks.length).toBeGreaterThan(0);
+        expect(signUpLinks.length).toBe(2);
     });
 
     it("closes mobile menu when overlay is clicked", async () => {
-        renderHeader();
+        render(headerComponent);
         await userEvent.click(screen.getByRole("button"));
 
         const overlay = document.querySelector("[class*='menuOverlay']") as HTMLElement;
@@ -98,13 +99,13 @@ describe("Header", () => {
 
     it("shows profile links in mobile menu for authenticated user", async () => {
         vi.mocked(useUser).mockReturnValue({
-            userId: mockUser.id,
             setUserId: vi.fn(),
-            user: mockUser,
             setUser: vi.fn(),
+            userId: mockUser.id,
+            user: mockUser
         });
 
-        renderHeader();
+        render(headerComponent);
         await userEvent.click(screen.getByRole("button"));
 
         expect(screen.getByText("Profile info")).toBeInTheDocument();

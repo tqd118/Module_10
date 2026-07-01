@@ -1,19 +1,15 @@
-export default function formatTime(dateString: string) {
-    const target = new Date(dateString).getTime();
-    const now = new Date().getTime();
+interface TimeResult {
+    count: number;
+    unit: "minutes" | "hours" | "days";
+}
 
-    const diffMs = now - target;
+export default function formatTime(dateString: string): TimeResult {
+    const diffMs = Date.now() - new Date(dateString).getTime();
     const diffMinutes = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMinutes / 60);
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffMinutes < 60) {
-        return `${diffMinutes} min`;
-    }
-
-    if (diffHours < 24) {
-        return `${diffHours} hours`;
-    }
-
-    return `${diffDays} day`;
+    if (diffMinutes < 60) return { count: diffMinutes, unit: "minutes" };
+    if (diffHours < 24)   return { count: diffHours,   unit: "hours"   };
+    return                       { count: diffDays,     unit: "days"    };
 }

@@ -1,30 +1,41 @@
+"use client"
+
 import s from "./CreatePost.module.scss"
-import { useUser } from "@/context/UserContext";
 import Button from "@/components/ui/Button";
 import { useState, lazy, Suspense } from "react";
 import Modal from "@/components/ui/Modal";
 import { getAssetUrl } from '@/utils/getAssetUrl';
+import { useAppSelector } from "@/store/hooks";
+import PostFormSkeleton from "@/components/features/PostForm/PostFormSkeleton";
+import { useTranslation } from "react-i18next";
+import Image from "next/image";
 
 const PostForm = lazy(() => import("@/components/features/PostForm"));
 
 export default function CreatePost() {
-    const { user } = useUser();
+    const { t } = useTranslation();
+    const user = useAppSelector(state => state.auth.user)
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
         <div className={s.createPost}>
-            <img src={getAssetUrl(user?.profileImage)} alt="avatar" className={s.userIcon}/>
-            <span className={s.title}>What’s happening?</span>
+            <Image 
+                src={getAssetUrl(user?.profileImage)} 
+                alt="avatar" 
+                className={s.userIcon}
+                width={64}
+                height={64}/>
+            <span className={s.title}>{t("feed.postCreationGreeting")}</span>
             <Button
                 onClick={() => setIsModalOpen(true)}
                 className={s.button}
             >
-                    Tell everyone
+                    {t("feed.postCreationButton")}
             </Button>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <Suspense fallback={<div className={s.fallback}>Loading</div>}>
+                <Suspense fallback={<PostFormSkeleton />}>
                     <PostForm onClose={() => setIsModalOpen(false)} />
                 </Suspense>
             </Modal>
