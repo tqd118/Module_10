@@ -1,70 +1,16 @@
-import { gql } from "@/api/graphql";
-import type { User } from "@/types/social";
-import { useUser } from "@/context/UserContext";
+"use client";
 
-const USER_FIELDS = `
-    id
-    username
-    email
-    firstName
-    secondName
-    profileImage
-    description
-    bio
-`;
-
-interface AuthResponse {
-    token: string;
-    user: User;
-}
+import { useAppDispatch } from "@/store/hooks";
+import { login as loginThunk, logout as logoutThunk, register as registerThunk } from "@/store/authSlice";
 
 export function useAuth() {
-    const { setUserId, setUser } = useUser();
+    const dispatch = useAppDispatch();
 
-    const login = async (email: string, password: string): Promise<User> => {
-        const { login } = await gql<{ login: AuthResponse }>(
-            `mutation Login($email: String!, $password: String!) {
-                login(email: $email, password: $password) {
-                    token
-                    user {
-                        ${USER_FIELDS}
-                    }
-                }
-            }`,
-            { email, password }
-        );
-
-        localStorage.setItem("token", login.token);
-        setUserId(login.user.id);
-        setUser(login.user);
-
-        return login.user;
-    }
-
-    const signup = async (email: string, password: string): Promise<string> => {
-        const { signup } = await gql<{ signup: { message: string } }>(
-            `mutation Signup($email: String!, $password: String!) {
-                signup(email: $email, password: $password) {
-                    message
-                }
-            }`,
-            { email, password }
-        );
-
-        return signup.message;
-    }
-
-    const logout = async (): Promise<void> => {
-        try {
-            await gql(`mutation { logout { message } }`);
-        } finally {
-            localStorage.removeItem("token");
-            localStorage.removeItem("userId");
-            localStorage.removeItem("user");
-            setUserId(null);
-            setUser(null);
-        }
-    }
-
-    return { login, signup, logout }
+    return {
+        login: (email: string, password: string) =>
+            dispatch(loginThunk({ email, password })).unwrap(),
+        signup: (email: string, password: string) =>
+            dispatch(registerThunk({ email, password })).unwrap(),
+        logout: () => dispatch(logoutThunk()).unwrap(),
+    };
 }

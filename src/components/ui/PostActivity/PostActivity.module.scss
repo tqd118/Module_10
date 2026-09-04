@@ -4,21 +4,36 @@
     gap: 8px;
     margin-top: 16px;
 
-    .likeIcon {
-        font-size: 24px;
-    }
-
     .commentsIcon {
         font-size: 24px;
         color: var(--color-text-primary);
         margin-left: 8px;
+    }
+
+    .likeIcon {
+        cursor: pointer;
+        font-size: 24px;
+        transition: transform 0.15s ease;
+
+        &:active {
+            transform: scale(1.1);
+        }
+
+        &.liked {
+            animation: pop 0.1s ease;
+        }
+
+        animation: pop 0.1s ease;
+    }
+
+    .likesCount {
+        display: inline-block;
     }
 }
 
 .expander {
     cursor: pointer;
 }
-
 
 .expand::before {
     display: inline-block;
@@ -30,12 +45,17 @@
     transform: rotate(180deg);
 }
 
-
 .expanded {
     display: flex;
     flex-direction: column;
     gap: 16px;
     margin-top: 16px;
+}
+
+@keyframes pop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 
 @media (max-width: 768px) {

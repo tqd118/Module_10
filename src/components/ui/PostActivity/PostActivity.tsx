@@ -1,9 +1,13 @@
+"use client"
+
 import type { Post, User } from "@/types/social";
 import s from "./PostActivity.module.scss"
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import CommentForm from "../CommentForm";
-import { useUser } from "@/context/UserContext";
 import { useComments } from "@/hooks/useComments";
+import { useAppSelector } from "@/store/hooks";
+import { useSpring, animated } from "@react-spring/web";
+import { useTranslation } from "react-i18next";
 
 interface PostActivityProps {
     post: Post;
@@ -11,7 +15,8 @@ interface PostActivityProps {
 }
 
 export default function PostActivity({post, onLike}: PostActivityProps) {
-    const { user } = useUser();
+    const { t } = useTranslation();
+    const user = useAppSelector(state => state.auth.user);
     const { comments, fetchPostComments, createComment } = useComments();
 
     const [expanded, setExpanded] = useState(false);
@@ -23,17 +28,43 @@ export default function PostActivity({post, onLike}: PostActivityProps) {
         }
     }
 
+    const contentRef = useRef<HTMLDivElement>(null);
+    const [contentHeight, setContentHeight] = useState(0);
+
+    useEffect(() => {
+        if (contentRef.current) {
+            setContentHeight(contentRef.current.scrollHeight);
+        }
+    }, [comments, expanded]);
+
+    const expandAnimation = useSpring({
+        height: expanded ? contentHeight : 0,
+        opacity: expanded ? 1 : 0,
+        overflow: "hidden",
+        config: { tension: 600, friction: 30 },
+    });
+
     return (
         <>
             <div className={s.short}>
-                <i className={`${s.likeIcon} ${liked ? "icon-like-filled" : "icon-like"}`} onClick={handleLike}/>
-                <span>{post.likesCount} likes</span>
+                <i
+                    key={liked ? "liked" : "unliked"}
+                    className={`
+                        ${s.likeIcon}
+                        ${liked ? "icon-like-filled" : "icon-like"}
+                        ${liked ? s.liked : ""}
+                    `}
+                    onClick={handleLike}
+                />
+                <span key={post.likesCount} className={s.likesCount}>
+                    {t("feed.likes", { count: post.likesCount })}
+                </span>
 
                 <i className={`${s.commentsIcon} icon-comments`}/>
                 {user ? (
-                    <span>{post.commentsCount} comments</span>
+                    <span>{t("feed.comments", {count: post.commentsCount})}</span>
                 ) : (
-                    <span>You have to login to see the comments</span>
+                    <span>{t("feed.loginToComment")}</span>
                 )}
 
                 {user && (
@@ -53,11 +84,13 @@ export default function PostActivity({post, onLike}: PostActivityProps) {
                 )}
             </div>
 
-            {user && expanded && (
-                <div className={s.expanded}>
-                    {comments.map((comment, i) => <span key={comment.id}>#{i + 1}. {comment.text}</span>)}
+            {user && (
+                <animated.div ref={contentRef} style={expandAnimation} className={s.expanded}>
+                    {comments.map((comment, i) => (
+                        <span key={comment.id}>#{i + 1}. {comment.text}</span>
+                    ))}
                     <CommentForm postId={post.id} onCreateComment={createComment} />
-                </div>
+                </animated.div>
             )}
         </>
     );

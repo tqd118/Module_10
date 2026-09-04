@@ -1,0 +1,124 @@
+{
+	"header": {
+		"signIn": "Sign In",
+		"signUp": "Sign Up"
+	},
+	"timeAgo": {
+		"minutes_one": "{{count}} minute ago",
+		"minutes_other": "{{count}} minutes ago",
+		"hours_one": "{{count}} hour ago",
+		"hours_other": "{{count}} hours ago",
+		"days_one": "{{count}} day ago",
+		"days_other": "{{count}} days ago"
+	},
+	"members": {
+		"member_one": "{{count}}{{unit}} member",
+		"member_other": "{{count}}{{unit}} members"
+	},
+	"feed": {
+		"likes_one": "{{count}} like",
+		"likes_other": "{{count}} likes",
+
+		"comments": "{{count}} comments",
+		"loginToComment": "You have to login to see the comments",
+
+		"postCreationGreeting": "What’s happening?",
+		"postCreationButton": "Tell everyone",
+
+		"peopleSuggestions": "Suggested people",
+		"groupSuggestions": "Communities you might like"
+	},
+	"forms": {
+		"createPost": "Create new post",
+		"addComment": "Add a comment",
+
+		"description": "Write description here...",
+		"descriptionLabel": "Description",
+		"title": "Enter post title",
+		"titleLabel": "Post Title",
+		"fileIsnstruction": "Select a file or drag and drop here",
+		"fileConstrains": "JPG, PNG or SVG, file size no more than 10MB",
+		
+		"required": "This field is required",
+		"requiredField": "{{field}} is required",
+
+		"create": "Create"
+	},
+	"profile": {
+		"editProfile": "Edit profile",
+		"preferences": "Preferences",
+		"saveChanges": "Save Profile Changes",
+
+		"updateSuccess": "Profile info has been updated successfully",
+
+		"changePhoto": "Change profile photo",
+		"username": "Username",
+		"fullName": "Full name",
+		"firstName": "First name",
+		"secondName": "Second name",
+		"description": "Description",
+
+		"charsLimit": "Max 200 chars",
+		"reachedCharsLimit": "Reached the 200 chars limit",
+
+		"usernameNotValid": "Username must contain only letters, numbers and _",
+
+		"actions": "Actions",
+		"logout": "Logout",
+		"darkTheme": "Dark theme",
+
+		"profileInfo": "Profile Info",
+		"stats": "Statistics",
+
+		"languageSwitch": "Switch language"
+	},
+	"auth": {
+		"signIn": "Sign In",
+		"signUp": "Sign Up",
+
+		"signInHeading": "Sign in to your account",
+		"signInSubHeading": "Enter your email and password\nto sign in to this app",
+
+		"signUpHeading": "Create an account",
+		"signUpSubHeading": "Enter your email and password\nto sign up for this app",
+
+		"email": "Email",
+		"password": "Password",
+
+		"enterEmail": "Enter email",
+		"enterPassword": "Enter password",
+
+		"emailNotValid": "Email is not valid",
+		"passwordTooShort": "Password is too short",
+
+		"signInSuccess": "Successfully signed in",
+		"signUpSuccess": "Successfully registered",
+
+		"invalidCredentials": "Incorrect email or password",
+		"registrationFailed": "Registration failed",
+
+		"strongPassword": "Your password is strong",
+
+		"noAccount": "Don't have an account?",
+		"hasAccount": "Already have an account?",
+
+		"termsAgreement": "By clicking continue, you agree to our",
+		"termsOfService": "Terms of Service",
+		"and": "and",
+		"privacyPolicy": "Privacy Policy"
+  	},
+	"months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+	"table": {
+		"month": "Month",
+		"counts": "{{columnTitle}} counts"
+	},
+	"stats": {
+		"likesTitle": "Likes",
+		"commentsTitle": "Comments",
+		"postsTitle": "Posts",
+		"likesColumnTitle": "Likes",
+		"commentsColumnTitle": "Comments",
+
+		"chartView": "Chart view"
+	}
+}

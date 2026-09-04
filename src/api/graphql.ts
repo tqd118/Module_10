@@ -1,32 +1,14 @@
-export async function gql<T>(
+import client from "./client";
+
+export async function gql<T = unknown>(
 	query: string,
 	variables?: Record<string, unknown>
 ): Promise<T> {
-    const token = localStorage.getItem("token");
-
-	const headers: Record<string, string> = {
-		"Content-Type": "application/json"
-	}
+	const response = await client.post("/graphql", { query, variables });
 	
-	if (token) {
-		headers.Authorization = `Bearer ${token}`
+	if (response.data.errors) {
+		throw new Error(response.data.errors[0].message);
 	}
 
-	const response = await fetch("/api/graphql", {
-		method: "POST",
-		headers,
-		body: JSON.stringify({ query, variables })
-	})
-	
-    if (!response.ok) {
-        throw new Error(`HTTP error: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (data.errors) {
-        throw new Error(data.errors[0].message);
-    }
-
-    return data.data;
+	return response.data.data;
 }

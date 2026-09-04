@@ -17,6 +17,9 @@
     --color-warn: #ffc14a;
     --color-success: #ff8811;
 
+    --color-skeleton-base:  #e0e2e7;
+    --color-skeleton-shine: #f0f1f4;
+
     --font-main: "Inter", sans-serif;
 
     --z-base: 0;
@@ -35,6 +38,9 @@
     --color-text-secondary: #8791b7;
 
     --color-border: #384162;
+
+    --color-skeleton-base:  #384162;
+    --color-skeleton-shine: #424d6e;
 }
 
 * {
@@ -112,4 +118,72 @@ body {
         transform: translateX(0);
         opacity: 0.8;
     }
+}
+
+
+.skeleton-line {
+    background: linear-gradient(
+        90deg,
+        var(--color-skeleton-base) 25%,
+        var(--color-skeleton-shine) 50%,
+        var(--color-skeleton-base) 75%
+    );
+    background-size: 200% 100%;
+    border-radius: 4px;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-circle {
+    border-radius: 50%;
+    background: linear-gradient(
+        90deg,
+        var(--color-skeleton-base) 25%,
+        var(--color-skeleton-shine) 50%,
+        var(--color-skeleton-base) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+}
+
+.app-fallback-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.app-fallback-page--error {
+    min-height: 100svh;
+    width: 100%;
+    gap: 90px;
+}
+
+.app-fallback-page--404 {
+    min-height: 100svh;
+    gap: 47px;
+}
+
+.app-fallback-page__icon {
+    color: var(--color-text-primary);
+}
+
+.app-fallback-page--error .app-fallback-page__icon {
+    font-size: 95px;
+}
+
+.app-fallback-page--404 .app-fallback-page__icon {
+    font-size: 180px;
+}
+
+.app-fallback-page__title {
+    margin: 0;
+    font-size: 60px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-align: center;
 }

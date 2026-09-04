@@ -1,0 +1,27 @@
+.switch {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface);
+
+    height: 40px;
+    width: fit-content;
+    padding: 4px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    line-height: 1.5;
+    margin: 0 auto;
+    
+    cursor: pointer;
+
+    .switchElement {
+        height: 100%;
+        padding: 4px 12px;
+
+        &.switchActive {
+            background-color: var(--color-brand-primary);
+            color: white;
+        }
+    }
+} 

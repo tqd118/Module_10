@@ -1,7 +1,10 @@
+"use client"
+
 import PostCard from "@/components/features/PostCard";
 import s from "./Feed.module.scss"
 import { useEffect } from "react";
 import { usePostsContext } from "@/context/PostsContext";
+import Spinner from "@/components/ui/Spinner";
 
 export default function Feed() {
     const { posts, fetchPosts, toggleLike, loading, error } = usePostsContext();
@@ -10,15 +13,13 @@ export default function Feed() {
         fetchPosts();
     }, []);
 
-    let content = null;
-
-    if (!loading && !error) {
-        content = posts.map(post => <PostCard post={post} onLike={toggleLike} key={post.id}/>)
-    }
-
     return (
         <div className={s.feed}>
-            {content}
+            {!error && (
+                loading ? <Spinner /> : (
+                    posts.map(post => <PostCard post={post} onLike={toggleLike} key={post.id}/>)
+                )
+            )}
         </div>
     )
 }
